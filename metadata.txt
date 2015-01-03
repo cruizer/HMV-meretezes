@@ -1,0 +1,11 @@
+; This is a comment.
+
+[general]
+name=HmvPLugin
+email=hello@tamaskalman.com
+author=Tamas Kalman
+qgisMinimumVersion=2.0
+description=HMV Halozat meretezo plugin.
+about=This paragraph can contain a detailed description
+    Salalalalal.
+version=version 0.2
