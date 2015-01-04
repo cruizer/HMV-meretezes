@@ -59,13 +59,10 @@ class HmvPlugin(QObject):
     for selection in selected:
       self.sizeListModel.removeRows(selection)
   def startNetworkValidation(self):
-    if self.netEnv == None:
       self.netEnv = NetworkEnvironment()
-    else:
-      self.netEnv.rebuildObjects()
-    self.netEnv.verifyObjectConnections()
+      self.netEnv.verifyObjectConnections()
   def startHeatlossCalc(self):
-    anaHeat = AnalyzeHeatLoss(netEnv)
+    anaHeat = AnalyzeHeatLoss(self.netEnv)
     logging.info('STAGE 1 | Starting heatloss analysis.' \
                   'Calculating network heatloss for the first nodes after taps first.')
     anaHeat.doAnalyze()

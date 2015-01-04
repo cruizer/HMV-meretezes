@@ -17,6 +17,10 @@ class NetworkEnvironment(object):
     self._createObjects()
     self._createNodePipeRelations()
     self.pipeSizeSet = [10, 12.5, 16, 19, 25, 32, 40] # Set of available pipe diameters in mm
+    # Constants to indicate the association state of elements
+    self.ASSOC_NOCHECK = 0
+    self.ASSOC_ERR = 1
+    self.ASSOC_OK = 2
   def _createLayers(self):
     # Load *node* layer
     self.nodesLayer = self.registry.mapLayersByName('elemek')[0]
@@ -82,24 +86,32 @@ class NetworkEnvironment(object):
         self._organizeVectors(nextNode=pipe.connectsEndNode, currentInPipe=pipe)
   def verifyObjectConnections(self):
     for pipe in self.pipesList:
-      if pipe.startNode == None or pipe.endNode == None:
-        pipe.setAttribute('assoc_error', True)
+      if pipe.connectsStartNode == None or pipe.connectsEndNode == None:
+        pipe.setAttribute('assoc_err', self.ASSOC_ERR)
+      else:
+        pipe.setAttribute('assoc_err', self.ASSOC_OK)
     for node in self.nodesList:
       if node.getType() == 'Csapolo':
         # If we are at a tap it should have one pipe coming in
         # and NO pipe going out.
         if len(node.inPipes) != 1 or len(node.outPipes) != 0:
-          node.setAttribute('assoc_error', True)
+          node.setAttribute('assoc_err', self.ASSOC_ERR)
+        else:
+          node.setAttribute('assoc_err', self.ASSOC_OK)
       elif node.getType() == 'Szivattyu':
         # If we are at the pump it should have one pipe going out
         # and NO pipe coming in.
         if len(node.inPipes) != 0 or len(node.outPipes) != 1:
-          node.setAttribute('assoc_error', True)
+          node.setAttribute('assoc_err', self.ASSOC_ERR)
+        else:
+          node.setAttribute('assoc_err', self.ASSOC_OK)
       else:
         # For all other nodes, they should have exactly on pipe
         # coming in and at least one pipe going out.
         if len(node.inPipes) != 1 or len(node.outPipes) < 1:
-          node.setAttribute('assoc_error', True)
+          node.setAttribute('assoc_err', self.ASSOC_ERR)
+        else:
+          node.setAttribute('assoc_err', self.ASSOC_OK)
   def _getNodesLayer(self):
     return self.nodesLayer
   def _getPipesLayer(self):
