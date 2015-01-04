@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>420</width>
+    <height>681</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,9 +18,51 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
+       <layout class="QVBoxLayout" name="sizeListBlock">
+        <item>
+         <layout class="QHBoxLayout" name="addRemoveButtons">
+          <item>
+           <widget class="QPushButton" name="addSize_btn">
+            <property name="text">
+             <string>+</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="removeSize_btn">
+            <property name="text">
+             <string>-</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Méret hozzáadása:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="insertSize_txtField"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QListView" name="sizeList"/>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QPushButton" name="validateStart_btn">
+        <property name="text">
+         <string>Hálózat ellenőrzés</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="heatlossStart_btn">
         <property name="text">
-         <string>Hoveszteseg meres</string>
+         <string>Hőveszteség mérés</string>
         </property>
        </widget>
       </item>

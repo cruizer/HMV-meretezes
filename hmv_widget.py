@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'hmv_widget.ui'
 #
-# Created: Mon Nov 17 22:48:17 2014
+# Created: Sun Jan  4 13:14:01 2015
 #      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,13 +26,37 @@ except AttributeError:
 class Ui_HmvWidget(QtGui.QDockWidget):
     def setupUi(self, HmvWidget):
         HmvWidget.setObjectName(_fromUtf8("HmvWidget"))
-        HmvWidget.resize(400, 300)
+        HmvWidget.resize(420, 681)
         self.dockWidgetContents = QtGui.QWidget()
         self.dockWidgetContents.setObjectName(_fromUtf8("dockWidgetContents"))
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.dockWidgetContents)
         self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
         self.verticalLayout = QtGui.QVBoxLayout()
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
+        self.sizeListBlock = QtGui.QVBoxLayout()
+        self.sizeListBlock.setObjectName(_fromUtf8("sizeListBlock"))
+        self.addRemoveButtons = QtGui.QHBoxLayout()
+        self.addRemoveButtons.setObjectName(_fromUtf8("addRemoveButtons"))
+        self.addSize_btn = QtGui.QPushButton(self.dockWidgetContents)
+        self.addSize_btn.setObjectName(_fromUtf8("addSize_btn"))
+        self.addRemoveButtons.addWidget(self.addSize_btn)
+        self.removeSize_btn = QtGui.QPushButton(self.dockWidgetContents)
+        self.removeSize_btn.setObjectName(_fromUtf8("removeSize_btn"))
+        self.addRemoveButtons.addWidget(self.removeSize_btn)
+        self.label = QtGui.QLabel(self.dockWidgetContents)
+        self.label.setObjectName(_fromUtf8("label"))
+        self.addRemoveButtons.addWidget(self.label)
+        self.insertSize_txtField = QtGui.QLineEdit(self.dockWidgetContents)
+        self.insertSize_txtField.setObjectName(_fromUtf8("insertSize_txtField"))
+        self.addRemoveButtons.addWidget(self.insertSize_txtField)
+        self.sizeListBlock.addLayout(self.addRemoveButtons)
+        self.sizeList = QtGui.QListView(self.dockWidgetContents)
+        self.sizeList.setObjectName(_fromUtf8("sizeList"))
+        self.sizeListBlock.addWidget(self.sizeList)
+        self.verticalLayout.addLayout(self.sizeListBlock)
+        self.validateStart_btn = QtGui.QPushButton(self.dockWidgetContents)
+        self.validateStart_btn.setObjectName(_fromUtf8("validateStart_btn"))
+        self.verticalLayout.addWidget(self.validateStart_btn)
         self.heatlossStart_btn = QtGui.QPushButton(self.dockWidgetContents)
         self.heatlossStart_btn.setObjectName(_fromUtf8("heatlossStart_btn"))
         self.verticalLayout.addWidget(self.heatlossStart_btn)
@@ -44,5 +68,9 @@ class Ui_HmvWidget(QtGui.QDockWidget):
 
     def retranslateUi(self, HmvWidget):
         HmvWidget.setWindowTitle(_translate("HmvWidget", "HMV Meretezes", None))
-        self.heatlossStart_btn.setText(_translate("HmvWidget", "Hoveszteseg meres", None))
+        self.addSize_btn.setText(_translate("HmvWidget", "+", None))
+        self.removeSize_btn.setText(_translate("HmvWidget", "-", None))
+        self.label.setText(_translate("HmvWidget", "Méret hozzáadása:", None))
+        self.validateStart_btn.setText(_translate("HmvWidget", "Hálózat ellenőrzés", None))
+        self.heatlossStart_btn.setText(_translate("HmvWidget", "Hőveszteség mérés", None))
 

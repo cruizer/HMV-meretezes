@@ -80,17 +80,17 @@ class NetworkEnvironment(object):
     if len(nextNode.outPipes) > 0:
       for pipe in nextNode.outPipes:
         self._organizeVectors(nextNode=pipe.connectsEndNode, currentInPipe=pipe)
-  def _verifyObjectConnections(self):
+  def verifyObjectConnections(self):
     for pipe in self.pipesList:
-      if pipe.startNode = None or pipe.endNode = None:
+      if pipe.startNode == None or pipe.endNode == None:
         pipe.setAttribute('assoc_error', True)
     for node in self.nodesList:
-      if node.getType() = 'Csapolo':
+      if node.getType() == 'Csapolo':
         # If we are at a tap it should have one pipe coming in
         # and NO pipe going out.
         if len(node.inPipes) != 1 or len(node.outPipes) != 0:
           node.setAttribute('assoc_error', True)
-      elif node.getType() = 'Szivattyu':
+      elif node.getType() == 'Szivattyu':
         # If we are at the pump it should have one pipe going out
         # and NO pipe coming in.
         if len(node.inPipes) != 0 or len(node.outPipes) != 1:
@@ -100,8 +100,6 @@ class NetworkEnvironment(object):
         # coming in and at least one pipe going out.
         if len(node.inPipes) != 1 or len(node.outPipes) < 1:
           node.setAttribute('assoc_error', True)
-
-
   def _getNodesLayer(self):
     return self.nodesLayer
   def _getPipesLayer(self):
@@ -110,6 +108,11 @@ class NetworkEnvironment(object):
     return self.nodeIterator
   def _getPipeIterator(self):
     return self.pipeIterator
+  def rebuildObjects(self):
+    self.nodesList = []
+    self.pipesList = []
+    self._createObjects()
+    self._createNodePipeRelations()
 
     
 

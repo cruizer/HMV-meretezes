@@ -5,6 +5,7 @@ import logging
 
 from hmv_widget import Ui_HmvWidget
 from hmv_meretezes import NetworkEnvironment, AnalyzeHeatLoss
+from hmv_meretezes_models import SizeListModel
 # initialize Qt resources from file resouces.py
 # import resources
 
@@ -18,6 +19,10 @@ class HmvPlugin(QObject):
     self.iface = iface
     # Setting up the application log
     self.configureLogging()
+    # Used to store the network environment once initialized
+    self.netEnv = None
+    # Model for GUI size list
+    self.sizeListModel = None
   def initGui(self):
     # create Qt action that will open the plugin
     self.stPluginAction = QAction("HMV Meretezes", self.iface.mainWindow())
@@ -34,14 +39,32 @@ class HmvPlugin(QObject):
     self.iface.removePluginMenu("HMV Meretezes", self.stPluginAction)
     QObject.disconnect(self.stPluginAction, SIGNAL("triggered()"), self.startPlugin)
   def startPlugin(self):
+    sizes = [10, 12.5, 16, 19, 25, 32, 40]
+    self.sizeListModel = SizeListModel(sizes)
     self.dock = Ui_HmvWidget()
     self.dock.setupUi(self.dock)
+    self.dock.sizeList.setModel(self.sizeListModel)
     self.iface.addDockWidget( Qt.RightDockWidgetArea, self.dock )
     self.bindConnections()
   def bindConnections(self):
     QObject.connect(self.dock.heatlossStart_btn, SIGNAL("clicked()"), self.startHeatlossCalc)
+    QObject.connect(self.dock.validateStart_btn, SIGNAL("clicked()"), self.startNetworkValidation)
+    QObject.connect(self.dock.addSize_btn, SIGNAL("clicked()"), self.addSizeToList)
+    QObject.connect(self.dock.removeSize_btn, SIGNAL("clicked()"), self.removeSizeFromList)
+  def addSizeToList(self):
+    value = self.dock.insertSize_txtField.text()
+    self.sizeListModel.insertRows(value)
+  def removeSizeFromList(self):
+    selected = self.dock.sizeList.selectedIndexes()
+    for selection in selected:
+      self.sizeListModel.removeRows(selection)
+  def startNetworkValidation(self):
+    if self.netEnv == None:
+      self.netEnv = NetworkEnvironment()
+    else:
+      self.netEnv.rebuildObjects()
+    self.netEnv.verifyObjectConnections()
   def startHeatlossCalc(self):
-    netEnv = NetworkEnvironment()
     anaHeat = AnalyzeHeatLoss(netEnv)
     logging.info('STAGE 1 | Starting heatloss analysis.' \
                   'Calculating network heatloss for the first nodes after taps first.')
