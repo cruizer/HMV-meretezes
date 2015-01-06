@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import qgis
 import logging
 import math
@@ -21,6 +22,12 @@ class NetworkEnvironment(object):
     self.ASSOC_NOCHECK = 0
     self.ASSOC_ERR = 1
     self.ASSOC_OK = 2
+    # Stores validation status
+    self.validationStats = { 'overallStatus': "Nem ellenőrzött",
+                              'allElementsCount': 0,
+                              'errElementsCount': 0,
+                              'errElements': []}
+    self.statusCodes = { 0: 'Nem ellenőrzött', 1: 'Hibás!', 2: 'OK'}
   def _createLayers(self):
     # Load *node* layer
     self.nodesLayer = self.registry.mapLayersByName('elemek')[0]
@@ -84,10 +91,27 @@ class NetworkEnvironment(object):
     if len(nextNode.outPipes) > 0:
       for pipe in nextNode.outPipes:
         self._organizeVectors(nextNode=pipe.connectsEndNode, currentInPipe=pipe)
+  def resetValidationStatus(self):
+    """Resets validation stat dictionary to initial values"""
+    self.validationStats = { 'overallStatus': 0,
+                              'allElementsCount': len(self.pipesList) + len(self.nodesList),
+                              'errElementsCount': 0,
+                              'errElements': []}
+  def addValidationErr(self, element):
+    # Constructing element data for error list
+    # Tuple: (layer's name, id, )
+    msg = [element.qgisLayer.name(), element.getAttribute('id'), element.getAttribute('tipus')]
+    self.validationStats['overallStatus'] = 1
+    self.validationStats['errElementsCount'] += 1
+    self.validationStats['errElements'].append(msg)
   def verifyObjectConnections(self):
+    # We reset the status
+    self.resetValidationStatus()
+    # Verify the all pipes have a node connected on both ends
     for pipe in self.pipesList:
       if pipe.connectsStartNode == None or pipe.connectsEndNode == None:
         pipe.setAttribute('assoc_err', self.ASSOC_ERR)
+        self.addValidationErr(pipe)
       else:
         pipe.setAttribute('assoc_err', self.ASSOC_OK)
     for node in self.nodesList:
@@ -96,6 +120,7 @@ class NetworkEnvironment(object):
         # and NO pipe going out.
         if len(node.inPipes) != 1 or len(node.outPipes) != 0:
           node.setAttribute('assoc_err', self.ASSOC_ERR)
+          self.addValidationErr(node)
         else:
           node.setAttribute('assoc_err', self.ASSOC_OK)
       elif node.getType() == 'Szivattyu':
@@ -103,6 +128,7 @@ class NetworkEnvironment(object):
         # and NO pipe coming in.
         if len(node.inPipes) != 0 or len(node.outPipes) != 1:
           node.setAttribute('assoc_err', self.ASSOC_ERR)
+          self.addValidationErr(node)
         else:
           node.setAttribute('assoc_err', self.ASSOC_OK)
       else:
@@ -110,8 +136,12 @@ class NetworkEnvironment(object):
         # coming in and at least one pipe going out.
         if len(node.inPipes) != 1 or len(node.outPipes) < 1:
           node.setAttribute('assoc_err', self.ASSOC_ERR)
+          self.addValidationErr(node)
         else:
           node.setAttribute('assoc_err', self.ASSOC_OK)
+    if self.validationStats['overallStatus'] == 0:
+      self.validationStats['overallStatus'] = 2
+    return self.validationStats
   def _getNodesLayer(self):
     return self.nodesLayer
   def _getPipesLayer(self):
@@ -210,8 +240,8 @@ class AnalyzeFlowRate(object):
         # Setting result
         logging.debug('Calculated flow for pipe id %s is %s.', pipe.getAttribute('id'), pipeFlow)
         pipe.setAttribute('terfaram', pipeFlow)
-        # We need to check if we reached the tap
-        if pipe.connectsEndNode.getType() != 'Csapolo':
+        # We need to check if we reached the pump
+        if pipe.connectsEndNode.getType() != 'Szivattyu':
           # Adding our next node to analyze
           nextNodeCache.append(pipe.connectsEndNode)
     if len(nextNodeCache) > 0:
