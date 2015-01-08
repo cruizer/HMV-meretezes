@@ -103,6 +103,7 @@ class HmvPlugin(QObject):
     anaHeat.doAnalyze()
     logging.info('STAGE 2 | Analyze network heatlos on next nodes in network.')
     anaHeat.analyzeNextNodes()
+    self.dock.totalHeatloss_label.setText(str(anaHeat.totalNetworkHeatloss))
   def startFlowCalc(self):
     anaFlow = AnalyzeFlowRate(self.netEnv)
     logging.info('STAGE 1 | Starting flow rate analysis.' \

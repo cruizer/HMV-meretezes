@@ -164,6 +164,8 @@ class AnalyzeHeatLoss(object):
     super(AnalyzeHeatLoss, self).__init__()
     self.env = NetworkEnvironment
     self.nextNodes = []
+    self.totalNetworkHeatloss = None
+    self.pumpFlow = None
   def _calculatePipeHeatloss(self):
     for pipe in self.env.pipesList:
       pipe.calculateHeatloss()
@@ -181,6 +183,9 @@ class AnalyzeHeatLoss(object):
                             ' a storage tank, will calculate node %s next round',
                             pipe.getAttribute('id'), pipe.connectsStartNode.getAttribute('id'))
               nextNodeCache.append(pipe.connectsStartNode)
+            else:
+              self.totalNetworkHeatloss = pipe.connectsStartNode.getAttribute('rendsz_hov')
+
     if len(nextNodeCache) > 0:
       self.nextNodes = nextNodeCache
       self.analyzeNextNodes()

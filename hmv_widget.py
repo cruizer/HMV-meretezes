@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'hmv_widget.ui'
 #
-# Created: Tue Jan  6 20:50:59 2015
+# Created: Thu Jan  8 21:28:05 2015
 #      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -167,6 +167,11 @@ class Ui_HmvWidget(QtGui.QDockWidget):
         self.horizontalLayout_9.setMargin(0)
         self.horizontalLayout_9.setObjectName(_fromUtf8("horizontalLayout_9"))
         self.totalHeatloss_label = QtGui.QLabel(self.widget4)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.totalHeatloss_label.sizePolicy().hasHeightForWidth())
+        self.totalHeatloss_label.setSizePolicy(sizePolicy)
         self.totalHeatloss_label.setObjectName(_fromUtf8("totalHeatloss_label"))
         self.horizontalLayout_9.addWidget(self.totalHeatloss_label)
         self.label_12 = QtGui.QLabel(self.widget4)
