@@ -176,7 +176,7 @@ class AnalyzeHeatLoss(object):
           if pipe.connectsStartNode.calculateNetworkHeatloss(pipe, False) == True:
             logging.debug('Network heatloss is completely calculated for node %s',
                           pipe.connectsStartNode.getAttribute('id'))
-            if pipe.connectsStartNode.inPipes[0].connectsStartNode.getType() != 'Tarolo':
+            if pipe.connectsStartNode.getType() != 'Szivattyu':
               logging.debug('The node on the other end of pipe %s is not' \
                             ' a storage tank, will calculate node %s next round',
                             pipe.getAttribute('id'), pipe.connectsStartNode.getAttribute('id'))
@@ -241,7 +241,7 @@ class AnalyzeFlowRate(object):
         logging.debug('Calculated flow for pipe id %s is %s.', pipe.getAttribute('id'), pipeFlow)
         pipe.setAttribute('terfaram', pipeFlow)
         # We need to check if we reached the pump
-        if pipe.connectsEndNode.getType() != 'Szivattyu':
+        if pipe.connectsEndNode.getType() != 'Csapolo':
           # Adding our next node to analyze
           nextNodeCache.append(pipe.connectsEndNode)
     if len(nextNodeCache) > 0:
