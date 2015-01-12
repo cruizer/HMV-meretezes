@@ -270,7 +270,7 @@
          <rect>
           <x>10</x>
           <y>340</y>
-          <width>116</width>
+          <width>171</width>
           <height>26</height>
          </rect>
         </property>
@@ -286,12 +286,12 @@
           <widget class="QComboBox" name="circFlow_combo">
            <item>
             <property name="text">
-             <string>m3/sec</string>
+             <string>dm3/h</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>dm3/h</string>
+             <string>m3/sec</string>
             </property>
            </item>
           </widget>
@@ -303,7 +303,7 @@
          <rect>
           <x>10</x>
           <y>270</y>
-          <width>30</width>
+          <width>91</width>
           <height>18</height>
          </rect>
         </property>

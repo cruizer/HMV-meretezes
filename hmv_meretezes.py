@@ -28,6 +28,14 @@ class NetworkEnvironment(object):
                               'errElementsCount': 0,
                               'errElements': []}
     self.statusCodes = { 0: 'Nem ellenőrzött', 1: 'Hibás!', 2: 'OK'}
+    # Default settings
+    self.sizes = [10, 12, 16, 19, 25, 32, 40]
+    self.density = 983.2 # kg/m3
+    self.specificHeat = 4200.0 # J/kgK
+    self.deltaTheta = 2.0 # K
+    # Total heatloss of flow network
+    self.totalNetworkHeatloss = None
+    self.pumpFlow = None
   def _createLayers(self):
     # Load *node* layer
     self.nodesLayer = self.registry.mapLayersByName('elemek')[0]
@@ -164,8 +172,6 @@ class AnalyzeHeatLoss(object):
     super(AnalyzeHeatLoss, self).__init__()
     self.env = NetworkEnvironment
     self.nextNodes = []
-    self.totalNetworkHeatloss = None
-    self.pumpFlow = None
   def _calculatePipeHeatloss(self):
     for pipe in self.env.pipesList:
       pipe.calculateHeatloss()
@@ -184,7 +190,8 @@ class AnalyzeHeatLoss(object):
                             pipe.getAttribute('id'), pipe.connectsStartNode.getAttribute('id'))
               nextNodeCache.append(pipe.connectsStartNode)
             else:
-              self.totalNetworkHeatloss = pipe.connectsStartNode.getAttribute('rendsz_hov')
+              self.env.totalNetworkHeatloss = pipe.connectsStartNode.getAttribute('rendsz_hov') # W
+              self.env.pumpFlow = self.env.totalNetworkHeatloss / ( self.env.density * self.env.specificHeat * self.env.deltaTheta ) * 3.6e6# dm3/h
 
     if len(nextNodeCache) > 0:
       self.nextNodes = nextNodeCache
@@ -218,13 +225,13 @@ class AnalyzeFlowRate(object):
     if len(startNode.outPipes) == 1:
       startPipe = startNode.outPipes[0] # Pipe going out from the pump
       # The flow rate of the first pipe the same as the pump's
-      startPipe.setAttribute('terfaram', startNode.getAttribute('terfaram'))
+      startPipe.setAttribute('terfaram', self.env.pumpFlow)
       self.nextNodes.append(startPipe.connectsEndNode)
     else:
       logging.error('Multiple pipes from pump!')
   def analyzeNextNodes(self):
     nextNodeCache = []
-    loggin.debug('Starting flow analysis for next node group.')
+    logging.debug('Starting flow analysis for next node group.')
     for node in self.nextNodes:
       logging.debug('Flow analysis at node id %s', node.getAttribute('id'))
       inPipeFlow = 0
@@ -233,14 +240,17 @@ class AnalyzeFlowRate(object):
         # We calculate the sum of incoming flow
         inPipeFlow += inPipe.getAttribute('terfaram')
         # We calculate the heatloss on incoming pipe(s)
-        inPipeHeatloss += inPipe.getAttribute('heatloss')
+        inPipeHeatloss += inPipe.getAttribute('hovesztes')
       logging.debug('Sum of incoming flow is %s and heatloss is %s.', inPipeFlow, inPipeHeatloss)
 
       for pipe in node.outPipes:
         logging.debug('Calculating flow at pipe id %s.', pipe.getAttribute('id'))
-        # The system heatloss on this branch from this node on
-        heatlossTillPipe = pipe.connectsEndNode.getAttribute('rendsz_hov') + pipe.getAttribute('hovesztes')
-        # Cacluclating the flow on outgoing branch
+        if pipe.connectsEndNode.getType() != 'Csapolo':
+          # The system heatloss on this branch from this node on
+          heatlossTillPipe = pipe.connectsEndNode.getAttribute('rendsz_hov') + pipe.getAttribute('hovesztes')
+        else:
+          heatlossTillPipe = pipe.getAttribute('hovesztes')
+        # Calculating the flow on outgoing branch
         pipeFlow = inPipeFlow * ( heatlossTillPipe / node.getAttribute('rendsz_hov'))
         # Setting result
         logging.debug('Calculated flow for pipe id %s is %s.', pipe.getAttribute('id'), pipeFlow)
@@ -260,18 +270,17 @@ class AnalyzePipeDiameter(object):
     super(AnalyzePipeDiameter, self).__init__()
     self.env = NetworkEnvironment
     self.MAX_FLOW_SPEED = 1.0 # m/s
-    self.MIN_FLOW_SPEED = 0.2 # m/s
   def doAnalyze(self):
     for pipe in self.env.pipesList:
       logging.debug('Calculating return pipe diameter for pipe id %s.', pipe.getAttribute('id'))
       # Flow pipe calculated flow
       pipeFlow = pipe.getAttribute('terfaram')
-      for diameter in self.env.pipeSizeSet:
+      for diameter in self.env.sizes:
         logging.debug('Checking if pipe diameter of %smm is good.', diameter)
-        flowSpeed = 4 * pipeFlow / ( pow((diameter / 1000.0), 2) * math.pi )
+        # We need to divide the pipe flow 3.6e6 because it is in dm3/h
+        flowSpeed = 4 * (pipeFlow / 3.6e6) / ( pow((diameter / 1000.0), 2) * math.pi )
         logging.debug('Flow speed is %sm/s.', flowSpeed)
-        # TODO: Refactor if sta with < 1 as the only condition
-        if flowSpeed > self.MIN_FLOW_SPEED and flowSpeed < self.MAX_FLOW_SPEED:
+        if flowSpeed < self.MAX_FLOW_SPEED:
           logging.debug('Flow speed is between 0.2-1.0 m/s we use this diameter.')
           pipe.setAttribute('vissza_atm', diameter)
           pipe.setAttribute('aram_seb', flowSpeed)

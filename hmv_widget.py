@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'hmv_widget.ui'
 #
-# Created: Thu Jan  8 21:28:05 2015
+# Created: Mon Jan 12 19:44:37 2015
 #      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -147,7 +147,7 @@ class Ui_HmvWidget(QtGui.QDockWidget):
         self.presurreLossStart_btn.setObjectName(_fromUtf8("presurreLossStart_btn"))
         self.verticalLayout_3.addWidget(self.presurreLossStart_btn)
         self.widget3 = QtGui.QWidget(self.analyze_tab)
-        self.widget3.setGeometry(QtCore.QRect(10, 340, 116, 26))
+        self.widget3.setGeometry(QtCore.QRect(10, 340, 171, 26))
         self.widget3.setObjectName(_fromUtf8("widget3"))
         self.horizontalLayout_8 = QtGui.QHBoxLayout(self.widget3)
         self.horizontalLayout_8.setMargin(0)
@@ -161,7 +161,7 @@ class Ui_HmvWidget(QtGui.QDockWidget):
         self.circFlow_combo.addItem(_fromUtf8(""))
         self.horizontalLayout_8.addWidget(self.circFlow_combo)
         self.widget4 = QtGui.QWidget(self.analyze_tab)
-        self.widget4.setGeometry(QtCore.QRect(10, 270, 30, 18))
+        self.widget4.setGeometry(QtCore.QRect(10, 270, 91, 18))
         self.widget4.setObjectName(_fromUtf8("widget4"))
         self.horizontalLayout_9 = QtGui.QHBoxLayout(self.widget4)
         self.horizontalLayout_9.setMargin(0)
@@ -266,8 +266,8 @@ class Ui_HmvWidget(QtGui.QDockWidget):
         self.pipeDragStart_btn.setText(_translate("HmvWidget", "Csősúrlódási tényező számítás", None))
         self.presurreLossStart_btn.setText(_translate("HmvWidget", "Kör nyomásesés számítása", None))
         self.circFlow_label.setText(_translate("HmvWidget", "-", None))
-        self.circFlow_combo.setItemText(0, _translate("HmvWidget", "m3/sec", None))
-        self.circFlow_combo.setItemText(1, _translate("HmvWidget", "dm3/h", None))
+        self.circFlow_combo.setItemText(0, _translate("HmvWidget", "dm3/h", None))
+        self.circFlow_combo.setItemText(1, _translate("HmvWidget", "m3/sec", None))
         self.totalHeatloss_label.setText(_translate("HmvWidget", "-", None))
         self.label_12.setText(_translate("HmvWidget", "W", None))
         self.tabs_Wdg.setTabText(self.tabs_Wdg.indexOf(self.analyze_tab), _translate("HmvWidget", "Analízis", None))
