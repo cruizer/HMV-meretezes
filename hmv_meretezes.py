@@ -37,7 +37,7 @@ class NetworkEnvironment(object):
     self.totalNetworkHeatloss = None
     self.pumpFlow = None
     # Flow path matrix
-    self.env.pathMatrix = []
+    self.pathMatrix = []
     # Pressure loss for each path in the matrix
     self.pathPressureLoss = []
     # Reference pressure = max(path pressure loss) + 3000 Pa
@@ -173,6 +173,20 @@ class NetworkEnvironment(object):
     self.pipesList = []
     self._createObjects()
     self._createNodePipeRelations()
+  def generateResults(self):
+    """Creates a 2D matrix that can be consumed by a QTableView object model"""
+    resultsMatrix = []
+    for pipe in self.pipesList:
+      resultsMatrix.append([pipe.getAttribute('hoatbocs'),
+                                  pipe.getAttribute('holeadas'),
+                                  pipe.getAttribute('hovesztes'),
+                                  pipe.getAttribute('terfaram'), # 'terfaram' in dm3/h
+                                  pipe.getAttribute('terfaram') / 3.6e6, # 'terfaram' in m3/s
+                                  pipe.getAttribute('vissza_atm'),
+                                  pipe.getAttribute('reynolds'),
+                                  pipe.getAttribute('cso_surl'),
+                                  pipe.getAttribute('nyomas_es')])
+    return resultsMatrix
 
     
 
@@ -311,6 +325,7 @@ class AnalyzePipeDrag(object):
       re = self.calculateReynoldsNumber(
               pipe.getAttribute('aram_seb'), # m/s
               pipe.getAttribute('vissza_atm')) # mm
+      pipe.setAttribute('reynolds', re)
       # IF the flow is laminar
       if re <= 2300:
         drag = 64 / re
@@ -331,14 +346,15 @@ class AnalyzePipeDrag(object):
     # Otherwise we continue the calculation recursively until we reach this goal
     else:
       return self._calcNLDrag(re, drag, roughness, diameter)
-class PressureLossCalc(object):
+class AnalyzePressure(object):
   """Calculates the pressure loss on each circulation path"""
   def __init__(self, NetworkEnvironment):
-    super(PressureLossCalc, self).__init__()
+    super(AnalyzePressure, self).__init__()
     self.env = NetworkEnvironment
   def doAnalyze(self):
     self._pressureLossOnPipe()
     self._createFlowPaths()
+    logging.debug(self.env.pathMatrix)
     self._pressureLossOnPaths()
     self._calculateReferencePathPressure()
     self._calculatePathChoke()
@@ -354,20 +370,23 @@ class PressureLossCalc(object):
       Vm = pipe.getAttribute('terfaram')
       kvm = pipe.getAttribute('szerelveny')
 
-      deltapm = (Lm * (lambdam / dm) + zetam) * ((pow(wm) * ro) / 2) + pow(Vm / kvm)
-      pipe.setAttribute('nyomas_es')
+      deltapm = (Lm * (lambdam / dm) + zetam) * ((pow(wm, 2) * ro) / 2) + pow(Vm / kvm, 2)
+      pipe.setAttribute('nyomas_es', deltapm)
   def _pressureLossOnPaths(self):
     self.env.pathPressureLoss = []
     for path in self.env.pathMatrix:
       pressureLoss = 0
-      for pipe in path:
-        pressureLoss += pipe.getAttribute('nyomas_es')
+      for item in path:
+        if type(item) is PipeObject:
+          pressureLoss += item.getAttribute('nyomas_es')
       self.env.pathPressureLoss.append(pressureLoss)
   def _createFlowPaths(self):
-    """Creates a matrix of flow paths with their respective elements"""
+    """Creates a matrix of flow paths with their respective elements
+    ATTENTION: pathMatrix is a mixed set of NodeObjects and PipeObjects!
+    """
     self.env.pathMatrix = []
     for node in self.env.nodesList:
-      if node.getType() = 'Csapolo':
+      if node.getType() == 'Csapolo':
         pathCache = []
         pathCache.append(node)
         for pipe in node.inPipes:
@@ -385,8 +404,8 @@ class PressureLossCalc(object):
   def _calculatePathChoke(self):
     self.env.chokePressureLoss = []
     self.env.chokeKv = []
-    for index, pathLoss in self.env.pathPressureLoss:
+    for index, pathLoss in enumerate(self.env.pathPressureLoss):
       chokePrLoss = self.env.referencePathPressure - pathLoss
       self.env.chokePressureLoss.append(chokePrLoss)
-      sels.env.chokeKv.append(self.env.pathMatrix[index][2] / math.sqrt(chokePrLoss))
+      self.env.chokeKv.append(self.env.pathMatrix[index][1].getAttribute('terfaram') / math.sqrt(chokePrLoss))
 

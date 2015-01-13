@@ -5,8 +5,9 @@ from qgis.core import *
 import logging
 
 from hmv_widget import Ui_HmvWidget
-from hmv_meretezes import NetworkEnvironment, AnalyzeHeatLoss, AnalyzeFlowRate, AnalyzePipeDiameter, AnalyzePipeDrag
-from hmv_meretezes_models import SizeListModel, ElementErrorTableModel
+from hmv_results import Ui_result_widget
+from hmv_meretezes import NetworkEnvironment, AnalyzeHeatLoss, AnalyzeFlowRate, AnalyzePipeDiameter, AnalyzePipeDrag, AnalyzePressure
+from hmv_meretezes_models import SizeListModel, ElementErrorTableModel, ResultsTableModel
 from qt_utility import QtTranslate
 # initialize Qt resources from file resouces.py
 # import resources
@@ -66,11 +67,19 @@ class HmvPlugin(QObject):
     QObject.connect(self.dock.validateStart_btn, SIGNAL("clicked()"), self.startNetworkValidation)
     QObject.connect(self.dock.returnPipeDiaStart_btn, SIGNAL("clicked()"), self.startPipeDiaCalc)
     QObject.connect(self.dock.pipeDragStart_btn, SIGNAL("clicked()"), self.startPipeDragCalc)
+    QObject.connect(self.dock.pressureLossStart_btn, SIGNAL("clicked()"), self.startPressureCalc)
     QObject.connect(self.dock.addSize_btn, SIGNAL("clicked()"), self.addSizeToList)
     QObject.connect(self.dock.removeSize_btn, SIGNAL("clicked()"), self.removeSizeFromList)
     QObject.connect(self.dock.saveSettings_btn, SIGNAL("clicked()"), self.saveSettings)
     QObject.connect(self.dock.resetSettings_btn, SIGNAL("clicked()"), self.setDefaultValues)
     QObject.connect(self.dock.circFlow_combo, SIGNAL("activated(int)"), self.refreshCircFlowDisplay)
+    QObject.connect(self.dock.showResults_btn, SIGNAL("clicked()"), self.openResultsWindow)
+  def openResultsWindow(self):
+    self.resultsWin = Ui_result_widget()
+    self.resultsWin.setupUi(self.resultsWin)
+    self.resultsModel = ResultsTableModel(self.netEnv.generateResults())
+    self.resultsWin.results_table.setModel(self.resultsModel)
+    self.resultsWin.show()
   def setDefaultValues(self):
     self.dock.density_txtField.setText(str(self.netEnv.density))
     self.dock.specificHeat_txtField.setText(str(self.netEnv.specificHeat))
@@ -130,3 +139,6 @@ class HmvPlugin(QObject):
   def startPipeDragCalc(self):
     calcDrag = AnalyzePipeDrag(self.netEnv)
     calcDrag.doAnalyze()
+  def startPressureCalc(self):
+    calcPress = AnalyzePressure(self.netEnv)
+    calcPress.doAnalyze()

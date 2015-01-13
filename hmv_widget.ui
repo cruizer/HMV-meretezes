@@ -24,7 +24,7 @@
        <attribute name="title">
         <string>Hálózat ell.</string>
        </attribute>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -112,7 +112,7 @@
        <attribute name="title">
         <string>Cső méretek</string>
        </attribute>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -218,7 +218,7 @@
          <string>Teljes előremenő hálózat hővesztesége</string>
         </property>
        </widget>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -257,7 +257,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="presurreLossStart_btn">
+          <widget class="QPushButton" name="pressureLossStart_btn">
            <property name="text">
             <string>Kör nyomásesés számítása</string>
            </property>
@@ -265,7 +265,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -298,7 +298,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -330,12 +330,25 @@
          </item>
         </layout>
        </widget>
+       <widget class="QPushButton" name="showResults_btn">
+        <property name="geometry">
+         <rect>
+          <x>200</x>
+          <y>550</y>
+          <width>181</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Eredmények mutatása</string>
+        </property>
+       </widget>
       </widget>
       <widget class="QWidget" name="settings_tab">
        <attribute name="title">
         <string>Beállítások</string>
        </attribute>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -410,7 +423,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>170</x>

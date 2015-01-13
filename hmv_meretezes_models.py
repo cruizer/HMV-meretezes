@@ -55,3 +55,30 @@ class ElementErrorTableModel(QAbstractTableModel):
     sectionList = [QtTranslate('HmvWidget', 'QGIS réteg', None), QtTranslate('HmvWidget', 'id', None), QtTranslate('HmvWidget', 'Típus', None)]
     if role == Qt.DisplayRole and orientation == Qt.Horizontal:
       return sectionList[section]
+
+class ResultsTableModel(QAbstractTableModel):
+  """Model used for the list of pipe sizes"""
+  def __init__(self, resultsMatrix, parent=None):
+    super(ResultsTableModel, self).__init__()
+    # It is a 2D array of the table contents
+    self.resultsMatrix = resultsMatrix
+  def rowCount(self, parent=None):
+    return len(self.resultsMatrix)
+  def columnCount(self, parent=None):
+    return len(self.resultsMatrix[0])
+  def data(self, index, role=Qt.DisplayRole):
+    if role == Qt.DisplayRole:
+      return self.resultsMatrix[index.row()][index.column()]
+  def headerData(self, section, orientation=Qt.Horizontal, role=Qt.DisplayRole):
+    sectionList = [ QtTranslate('result_widget', 'km (W/mK)', None),
+                    QtTranslate('result_widget', 'qm (W/m)', None),
+                    QtTranslate('result_widget', 'Qm (W)', None),
+                    QtTranslate('result_widget', 'Q (W)', None),
+                    QtTranslate('result_widget', 'Vm (m3/s)', None),
+                    QtTranslate('result_widget', 'Vm (dm3/h)', None),
+                    QtTranslate('result_widget', 'dm (mm)', None),
+                    QtTranslate('result_widget', 'Rem', None),
+                    QtTranslate('result_widget', 'lambdam', None),
+                    QtTranslate('result_widget', 'dpm (Pa)', None)]
+    if role == Qt.DisplayRole and orientation == Qt.Horizontal:
+      return sectionList[section]
