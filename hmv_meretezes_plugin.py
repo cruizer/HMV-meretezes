@@ -5,7 +5,7 @@ from qgis.core import *
 import logging
 
 from hmv_widget import Ui_HmvWidget
-from hmv_meretezes import NetworkEnvironment, AnalyzeHeatLoss, AnalyzeFlowRate, AnalyzePipeDiameter
+from hmv_meretezes import NetworkEnvironment, AnalyzeHeatLoss, AnalyzeFlowRate, AnalyzePipeDiameter, AnalyzePipeDrag
 from hmv_meretezes_models import SizeListModel, ElementErrorTableModel
 from qt_utility import QtTranslate
 # initialize Qt resources from file resouces.py
@@ -65,6 +65,7 @@ class HmvPlugin(QObject):
     QObject.connect(self.dock.flowRateStart_btn, SIGNAL("clicked()"), self.startFlowCalc)
     QObject.connect(self.dock.validateStart_btn, SIGNAL("clicked()"), self.startNetworkValidation)
     QObject.connect(self.dock.returnPipeDiaStart_btn, SIGNAL("clicked()"), self.startPipeDiaCalc)
+    QObject.connect(self.dock.pipeDragStart_btn, SIGNAL("clicked()"), self.startPipeDragCalc)
     QObject.connect(self.dock.addSize_btn, SIGNAL("clicked()"), self.addSizeToList)
     QObject.connect(self.dock.removeSize_btn, SIGNAL("clicked()"), self.removeSizeFromList)
     QObject.connect(self.dock.saveSettings_btn, SIGNAL("clicked()"), self.saveSettings)
@@ -126,3 +127,6 @@ class HmvPlugin(QObject):
       self.dock.circFlow_label.setText(str(self.netEnv.pumpFlow / 3.6e6))
     elif self.dock.circFlow_combo.currentText() == 'dm3/h':
       self.dock.circFlow_label.setText(str(self.netEnv.pumpFlow))
+  def startPipeDragCalc(self):
+    calcDrag = AnalyzePipeDrag(self.netEnv)
+    calcDrag.doAnalyze()

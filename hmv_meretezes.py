@@ -36,6 +36,16 @@ class NetworkEnvironment(object):
     # Total heatloss of flow network
     self.totalNetworkHeatloss = None
     self.pumpFlow = None
+    # Flow path matrix
+    self.env.pathMatrix = []
+    # Pressure loss for each path in the matrix
+    self.pathPressureLoss = []
+    # Reference pressure = max(path pressure loss) + 3000 Pa
+    self.referencePathPressure = None
+    # Choke pressure loss for each path in the matrix
+    self.chokePressureLoss = []
+    # Choke kv value for each path in the matrix
+    self.chokeKv = []
   def _createLayers(self):
     # Load *node* layer
     self.nodesLayer = self.registry.mapLayersByName('elemek')[0]
@@ -291,7 +301,7 @@ class AnalyzePipeDrag(object):
   def __init__(self, NetworkEnvironment):
     super(AnalyzePipeDrag, self).__init__()
     self.env = NetworkEnvironment
-    self.KINEMATICAL_VISCOSITY = 5 * pow(10, -7)
+    self.KINEMATICAL_VISCOSITY = 5e-7
     # Lambda zero
     self.DRAG_INITIAL = 0.02
   def calculateReynoldsNumber(self, flowSpeed, diameter):
@@ -299,19 +309,19 @@ class AnalyzePipeDrag(object):
   def doAnalyze(self):
     for pipe in self.env.pipesList:
       re = self.calculateReynoldsNumber(
-              pipe.getAttribute('aram_seb'),
-              pipe.getAttribute('vissza_atm'))
+              pipe.getAttribute('aram_seb'), # m/s
+              pipe.getAttribute('vissza_atm')) # mm
       # IF the flow is laminar
       if re <= 2300:
         drag = 64 / re
       # IF the flow is non-laminar
       elif re > 2300:
-        drag = self.calcNLDrag(re,
+        drag = self._calcNLDrag(re,
                               self.DRAG_INITIAL,
                               pipe.getAttribute('cso_erdess'),
                               pipe.getAttribute('vissza_atm'))
       pipe.setAttribute('cso_surl', drag)
-  def calcNLDrag(self, re, dragPrev, roughness, diameter):
+  def _calcNLDrag(self, re, dragPrev, roughness, diameter):
     # Non-laminar drag calculation
     drag = 1 / pow((-2 * math.log10((2.51 / (re * math.sqrt(dragPrev))) + roughness / (3.71 * diameter) )), 2)
     # IF the difference between the previous and current drag calculation
@@ -320,7 +330,63 @@ class AnalyzePipeDrag(object):
       return drag
     # Otherwise we continue the calculation recursively until we reach this goal
     else:
-      return self.calcNLDrag(re, drag, roughness, diameter)
+      return self._calcNLDrag(re, drag, roughness, diameter)
+class PressureLossCalc(object):
+  """Calculates the pressure loss on each circulation path"""
+  def __init__(self, NetworkEnvironment):
+    super(PressureLossCalc, self).__init__()
+    self.env = NetworkEnvironment
+  def doAnalyze(self):
+    self._pressureLossOnPipe()
+    self._createFlowPaths()
+    self._pressureLossOnPaths()
+    self._calculateReferencePathPressure()
+    self._calculatePathChoke()
+  def _pressureLossOnPipe(self):
+    for pipe in self.env.pipesList:
+      # We fetch the data required for the calculation
+      Lm = pipe.getAttribute('hossz')
+      lambdam = pipe.getAttribute('cso_surl')
+      dm = pipe.getAttribute('vissza_atm')
+      zetam = pipe.getAttribute('alaki_teny')
+      wm = pipe.getAttribute('aram_seb')
+      ro = self.env.density
+      Vm = pipe.getAttribute('terfaram')
+      kvm = pipe.getAttribute('szerelveny')
 
-
+      deltapm = (Lm * (lambdam / dm) + zetam) * ((pow(wm) * ro) / 2) + pow(Vm / kvm)
+      pipe.setAttribute('nyomas_es')
+  def _pressureLossOnPaths(self):
+    self.env.pathPressureLoss = []
+    for path in self.env.pathMatrix:
+      pressureLoss = 0
+      for pipe in path:
+        pressureLoss += pipe.getAttribute('nyomas_es')
+      self.env.pathPressureLoss.append(pressureLoss)
+  def _createFlowPaths(self):
+    """Creates a matrix of flow paths with their respective elements"""
+    self.env.pathMatrix = []
+    for node in self.env.nodesList:
+      if node.getType() = 'Csapolo':
+        pathCache = []
+        pathCache.append(node)
+        for pipe in node.inPipes:
+          self._recursePath(pipe, pathCache)
+        self.env.pathMatrix.append(pathCache)
+  def _recursePath(self, nextPipe, pathCache):
+    """Recurses through a path to add the elements to a list"""
+    pathCache.append(nextPipe)
+    pathCache.append(nextPipe.connectsStartNode)
+    if nextPipe.connectsStartNode.getType() != 'Szivattyu':
+      for pipe in nextPipe.connectsStartNode.inPipes:
+        self._recursePath(pipe, pathCache)
+  def _calculateReferencePathPressure(self):
+    self.env.referencePathPressure = max(self.env.pathPressureLoss) + 3000 # Pa
+  def _calculatePathChoke(self):
+    self.env.chokePressureLoss = []
+    self.env.chokeKv = []
+    for index, pathLoss in self.env.pathPressureLoss:
+      chokePrLoss = self.env.referencePathPressure - pathLoss
+      self.env.chokePressureLoss.append(chokePrLoss)
+      sels.env.chokeKv.append(self.env.pathMatrix[index][2] / math.sqrt(chokePrLoss))
 
