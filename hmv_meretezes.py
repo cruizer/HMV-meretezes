@@ -134,7 +134,7 @@ class NetworkEnvironment(object):
       else:
         pipe.setAttribute('assoc_err', self.ASSOC_OK)
     for node in self.nodesList:
-      if node.getType() == u'Csapoló':
+      if node.getType() == 'Csapolo':
         # If we are at a tap it should have one pipe coming in
         # and NO pipe going out.
         if len(node.inPipes) != 1 or len(node.outPipes) != 0:
@@ -240,7 +240,7 @@ class AnalyzeHeatLoss(object):
     self._calculatePipeHeatloss()
 
     for node in self.env.nodesList:
-      if node.getType() == u'Csapoló':
+      if node.getType() == 'Csapolo':
         logging.debug('Checking tap id: %s', node.getId())
         for pipe in node.inPipes:
           logging.debug('Analyzing pipe %s id coming IN to tap', pipe.getId())
@@ -284,7 +284,7 @@ class AnalyzeFlowRate(object):
 
       for pipe in node.outPipes:
         logging.debug('Calculating flow at pipe id %s.', pipe.getId())
-        if pipe.connectsEndNode.getType() != u'Csapoló':
+        if pipe.connectsEndNode.getType() != 'Csapolo':
           # The system heatloss on this branch from this node on
           heatlossTillPipe = pipe.connectsEndNode.getAttribute('rendsz_hov') + pipe.getAttribute('hovesztes')
         else:
@@ -295,7 +295,7 @@ class AnalyzeFlowRate(object):
         logging.debug('Calculated flow for pipe id %s is %s.', pipe.getId(), pipeFlow)
         pipe.setAttribute('terfaram', pipeFlow)
         # We need to check if we reached the pump
-        if pipe.connectsEndNode.getType() != u'Csapoló':
+        if pipe.connectsEndNode.getType() != 'Csapolo':
           # Adding our next node to analyze
           nextNodeCache.append(pipe.connectsEndNode)
     if len(nextNodeCache) > 0:
@@ -399,7 +399,7 @@ class AnalyzePressure(object):
     """
     self.env.pathMatrix = []
     for node in self.env.nodesList:
-      if node.getType() == u'Csapoló':
+      if node.getType() == 'Csapolo':
         if len(self.env.pathMatrix) > 0:
           for idx, pathItem in enumerate(self.env.pathMatrix):
             if pathItem[0].getCoordinates().x() > node.getCoordinates().x():
