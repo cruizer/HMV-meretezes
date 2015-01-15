@@ -10,6 +10,8 @@ class NetworkObject(object):
     super(NetworkObject, self).__init__()
     self.qgisElement = qgisElement
     self.qgisLayer = qgisLayer
+  def getId(self):
+    return self.qgisElement.id()
   def getType(self):
     return self.qgisElement.attribute('tipus')
   def getGeometryType(self):
@@ -78,7 +80,7 @@ class NodeObject(NetworkObject):
     
     self.heatlossCache.append(networkHeatloss)
     logging.debug('Number of outgoing pipes from node id %s is %s from this, we have %s added to the heatloss cache.',
-                  self.getAttribute('id'), len(self.outPipes), len(self.heatlossCache))
+                  self.getId(), len(self.outPipes), len(self.heatlossCache))
     if len(self.heatlossCache) == len(self.outPipes):
       self.saveHeatlossFromCache()
       return True
@@ -175,5 +177,5 @@ class PipeObject(NetworkObject):
     # Hoveszteseg a szakaszra
     heatLoss = heatDissipation * Lm
     self.setAttribute('hovesztes', heatLoss)
-    logging.debug('The heat loss on the pipe with id %s is %s .', self.getAttribute('id'), heatLoss)
+    logging.debug('The heat loss on the pipe with id %s is %s .', self.getId(), heatLoss)
     

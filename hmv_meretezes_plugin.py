@@ -6,8 +6,10 @@ import logging
 
 from hmv_widget import Ui_HmvWidget
 from hmv_results import Ui_result_widget
+from hmv_chart import Ui_pipeFlowChart_wdg
+from chart import PipeFlowChartCanvas
 from hmv_meretezes import NetworkEnvironment, AnalyzeHeatLoss, AnalyzeFlowRate, AnalyzePipeDiameter, AnalyzePipeDrag, AnalyzePressure
-from hmv_meretezes_models import SizeListModel, ElementErrorTableModel, ResultsTableModel
+from hmv_meretezes_models import SizeListModel, ElementErrorTableModel, ResultsTableModel, PressureTableModel
 from qt_utility import QtTranslate
 # initialize Qt resources from file resouces.py
 # import resources
@@ -62,32 +64,62 @@ class HmvPlugin(QObject):
     self.bindConnections()
   def bindConnections(self):
     """Binds actions to GUI object signals"""
+    # Analysis actions
     QObject.connect(self.dock.heatlossStart_btn, SIGNAL("clicked()"), self.startHeatlossCalc)
     QObject.connect(self.dock.flowRateStart_btn, SIGNAL("clicked()"), self.startFlowCalc)
     QObject.connect(self.dock.validateStart_btn, SIGNAL("clicked()"), self.startNetworkValidation)
     QObject.connect(self.dock.returnPipeDiaStart_btn, SIGNAL("clicked()"), self.startPipeDiaCalc)
     QObject.connect(self.dock.pipeDragStart_btn, SIGNAL("clicked()"), self.startPipeDragCalc)
     QObject.connect(self.dock.pressureLossStart_btn, SIGNAL("clicked()"), self.startPressureCalc)
+    QObject.connect(self.dock.theAnalysis_btn, SIGNAL("clicked()"), self.startAllCalc)
+    # Settings
     QObject.connect(self.dock.addSize_btn, SIGNAL("clicked()"), self.addSizeToList)
     QObject.connect(self.dock.removeSize_btn, SIGNAL("clicked()"), self.removeSizeFromList)
     QObject.connect(self.dock.saveSettings_btn, SIGNAL("clicked()"), self.saveSettings)
     QObject.connect(self.dock.resetSettings_btn, SIGNAL("clicked()"), self.setDefaultValues)
     QObject.connect(self.dock.circFlow_combo, SIGNAL("activated(int)"), self.refreshCircFlowDisplay)
+    # Result windows
     QObject.connect(self.dock.showResults_btn, SIGNAL("clicked()"), self.openResultsWindow)
+    QObject.connect(self.dock.showPressureResults_btn, SIGNAL("clicked()"), self.openPressureResultsWindow)
+    QObject.connect(self.dock.showPipeFlowChart_btn, SIGNAL("clicked()"), self.openChartWindow)
+  def startAllCalc(self):
+    self.startHeatlossCalc()
+    self.startFlowCalc()
+    self.startPipeDiaCalc()
+    self.startPipeDragCalc()
+    self.startPressureCalc()
   def openResultsWindow(self):
+    """Opens a new window with the analysis results like heatloss and related, results window #1"""
     self.resultsWin = Ui_result_widget()
     self.resultsWin.setupUi(self.resultsWin)
     self.resultsModel = ResultsTableModel(self.netEnv.generateResults())
     self.resultsWin.results_table.setModel(self.resultsModel)
+    QObject.connect(self.resultsWin.closeWindow_btn, SIGNAL("clicked()"), self.resultsWin.close)
     self.resultsWin.show()
+  def openPressureResultsWindow(self):
+    """Opens a new windo with the analysis results like pressure loss, results window #2"""
+    self.pressureResultsWin = Ui_result_widget()
+    self.pressureResultsWin.setupUi(self.pressureResultsWin)
+    self.pressureResultsModel = PressureTableModel(self.netEnv.generatePressureResults())
+    self.pressureResultsWin.results_table.setModel(self.pressureResultsModel)
+    QObject.connect(self.pressureResultsWin.closeWindow_btn, SIGNAL("clicked()"), self.pressureResultsWin.close)
+    self.pressureResultsWin.show()
+  def openChartWindow(self):
+    self.chartWin = Ui_pipeFlowChart_wdg()
+    self.chartWin.setupUi(self.chartWin)
+    chart = PipeFlowChartCanvas(flowData=self.netEnv.generateFlowGraphResults(), parent=self.chartWin)
+    self.chartWin.chartTarget_lo.addWidget(chart)
+    self.chartWin.show()
   def setDefaultValues(self):
     self.dock.density_txtField.setText(str(self.netEnv.density))
     self.dock.specificHeat_txtField.setText(str(self.netEnv.specificHeat))
     self.dock.deltaTheta_txtField.setText(str(self.netEnv.deltaTheta))
+    self.dock.pipeSpeedLimit_txtField.setText(str(self.netEnv.pipeSpeedLimit))
   def saveSettings(self):
     self.netEnv.density = float(self.dock.density_txtField.text())
     self.netEnv.specificHeat = float(self.dock.specificHeat_txtField.text())
     self.netEnv.deltaTheta = float(self.dock.deltaTheta_txtField.text())
+    self.netEnv.pipeSpeedLimit = float(self.dock.pipeSpeedLimit_txtField.text())
   def addSizeToList(self):
     value = self.dock.insertSize_txtField.text()
     self.sizeListModel.insertRows(value)

@@ -33,6 +33,7 @@ class NetworkEnvironment(object):
     self.density = 983.2 # kg/m3
     self.specificHeat = 4200.0 # J/kgK
     self.deltaTheta = 2.0 # K
+    self.pipeSpeedLimit = 1 # m/s
     # Total heatloss of flow network
     self.totalNetworkHeatloss = None
     self.pumpFlow = None
@@ -68,10 +69,10 @@ class NetworkEnvironment(object):
           node.outPipes.append(pipe)
           pipe.connectsStartNode = node
           msg = Template('Adding pipe $pipe to the list of pipes running OUT of node $node')
-          logging.debug(msg.substitute(pipe=pipe.getAttribute('id'), node=node.getAttribute('id')))
+          logging.debug(msg.substitute(pipe=pipe.getId(), node=node.getId()))
         elif node.connectsEnd(pipe):
           msg = Template('Adding pipe $pipe to the list of pipes coming IN to node $node')
-          logging.debug(msg.substitute(pipe=pipe.getAttribute('id'), node=node.getAttribute('id')))
+          logging.debug(msg.substitute(pipe=pipe.getId(), node=node.getId()))
           node.inPipes.append(pipe)
           pipe.connectsEndNode = node
   def _organizeVectors(self, nextNode=None, currentInPipe=None, firstRun=False):
@@ -82,7 +83,7 @@ class NetworkEnvironment(object):
     if firstRun == True:
       # First we look for the starting point we can iterate from
       for node in self.nodesList:
-        if node.getAttribute('tipus') == 'Szivattyu':
+        if node.getAttribute('tipus') == 'MTB':
           # Once found, that is our starting point
           startNode = node
           break
@@ -118,7 +119,7 @@ class NetworkEnvironment(object):
   def addValidationErr(self, element):
     # Constructing element data for error list
     # Tuple: (layer's name, id, )
-    msg = [element.qgisLayer.name(), element.getAttribute('id'), element.getAttribute('tipus')]
+    msg = [element.qgisLayer.name(), element.getId(), element.getAttribute('tipus')]
     self.validationStats['overallStatus'] = 1
     self.validationStats['errElementsCount'] += 1
     self.validationStats['errElements'].append(msg)
@@ -133,7 +134,7 @@ class NetworkEnvironment(object):
       else:
         pipe.setAttribute('assoc_err', self.ASSOC_OK)
     for node in self.nodesList:
-      if node.getType() == 'Csapolo':
+      if node.getType() == u'Csapoló':
         # If we are at a tap it should have one pipe coming in
         # and NO pipe going out.
         if len(node.inPipes) != 1 or len(node.outPipes) != 0:
@@ -141,7 +142,7 @@ class NetworkEnvironment(object):
           self.addValidationErr(node)
         else:
           node.setAttribute('assoc_err', self.ASSOC_OK)
-      elif node.getType() == 'Szivattyu':
+      elif node.getType() == 'MTB':
         # If we are at the pump it should have one pipe going out
         # and NO pipe coming in.
         if len(node.inPipes) != 0 or len(node.outPipes) != 1:
@@ -177,19 +178,33 @@ class NetworkEnvironment(object):
     """Creates a 2D matrix that can be consumed by a QTableView object model"""
     resultsMatrix = []
     for pipe in self.pipesList:
-      resultsMatrix.append([pipe.getAttribute('hoatbocs'),
-                                  pipe.getAttribute('holeadas'),
-                                  pipe.getAttribute('hovesztes'),
-                                  pipe.getAttribute('terfaram'), # 'terfaram' in dm3/h
-                                  pipe.getAttribute('terfaram') / 3.6e6, # 'terfaram' in m3/s
-                                  pipe.getAttribute('vissza_atm'),
-                                  pipe.getAttribute('reynolds'),
-                                  pipe.getAttribute('cso_surl'),
-                                  pipe.getAttribute('nyomas_es')])
+      resultsMatrix.append([pipe.getId(),
+                            pipe.getAttribute('hoatbocs'),
+                            pipe.getAttribute('holeadas'),
+                            pipe.getAttribute('hovesztes'),
+                            pipe.getAttribute('terfaram'), # 'terfaram' in dm3/h
+                            pipe.getAttribute('vissza_atm'),
+                            pipe.getAttribute('reynolds'),
+                            pipe.getAttribute('cso_surl'),
+                            pipe.getAttribute('nyomas_es')])
     return resultsMatrix
-
+  def generatePressureResults(self):
+    """Creates a 2D matrix of pressure data that can be used by a QTableView object model"""
+    pressureResultsMatrix = []
+    path = 0
+    for pLoss, chokeLoss, chokeKv in zip(self.pathPressureLoss, self.chokePressureLoss, self.chokeKv):
+      pressureResultsMatrix.append([path, pLoss, chokeLoss, chokeKv])
+      path += 1
+    return pressureResultsMatrix
+  def generateFlowGraphResults(self):
+    """Creates a list of pipe flow value for each pipe before the tap"""
+    flowsList = []
+    for path in self.pathMatrix:
+      # We extract the flow value from the second item in the path, which is the
+      # first pipe after the tap, this is what we need.
+      flowsList.append(path[1].getAttribute('terfaram'))
+    return flowsList
     
-
 class AnalyzeHeatLoss(object):
   """Carries out heat loss analysis of a pipe network"""
   def __init__(self, NetworkEnvironment):
@@ -204,14 +219,14 @@ class AnalyzeHeatLoss(object):
     for node in self.nextNodes:
       for pipe in node.inPipes:
           logging.debug('Adding network heatloss coming in from pipe %s to node %s',
-                          pipe.getAttribute('id'), pipe.connectsStartNode.getAttribute('id'))
+                          pipe.getId(), pipe.connectsStartNode.getId())
           if pipe.connectsStartNode.calculateNetworkHeatloss(pipe, False) == True:
             logging.debug('Network heatloss is completely calculated for node %s',
-                          pipe.connectsStartNode.getAttribute('id'))
-            if pipe.connectsStartNode.getType() != 'Szivattyu':
+                          pipe.connectsStartNode.getId())
+            if pipe.connectsStartNode.getType() != 'MTB':
               logging.debug('The node on the other end of pipe %s is not' \
                             ' a storage tank, will calculate node %s next round',
-                            pipe.getAttribute('id'), pipe.connectsStartNode.getAttribute('id'))
+                            pipe.getId(), pipe.connectsStartNode.getId())
               nextNodeCache.append(pipe.connectsStartNode)
             else:
               self.env.totalNetworkHeatloss = pipe.connectsStartNode.getAttribute('rendsz_hov') # W
@@ -225,13 +240,13 @@ class AnalyzeHeatLoss(object):
     self._calculatePipeHeatloss()
 
     for node in self.env.nodesList:
-      if node.getType() == 'Csapolo':
-        logging.debug('Checking tap id: %s', node.getAttribute('id'))
+      if node.getType() == u'Csapoló':
+        logging.debug('Checking tap id: %s', node.getId())
         for pipe in node.inPipes:
-          logging.debug('Analyzing pipe %s id coming IN to tap', pipe.getAttribute('id'))
+          logging.debug('Analyzing pipe %s id coming IN to tap', pipe.getId())
           if pipe.connectsStartNode.calculateNetworkHeatloss(pipe, True) == True:
             logging.debug('Network heatloss is completely calculated for node %s',
-                            pipe.connectsStartNode.getAttribute('id'))
+                            pipe.connectsStartNode.getId())
             self.nextNodes.append(pipe.connectsStartNode)
 
 class AnalyzeFlowRate(object):
@@ -243,7 +258,7 @@ class AnalyzeFlowRate(object):
     self.nextNodes = []
   def doAnalyze(self):
     for node in self.env.nodesList:
-      if node.getType() == 'Szivattyu':
+      if node.getType() == 'MTB':
         startNode = node # The pump
         break
     if len(startNode.outPipes) == 1:
@@ -257,7 +272,7 @@ class AnalyzeFlowRate(object):
     nextNodeCache = []
     logging.debug('Starting flow analysis for next node group.')
     for node in self.nextNodes:
-      logging.debug('Flow analysis at node id %s', node.getAttribute('id'))
+      logging.debug('Flow analysis at node id %s', node.getId())
       inPipeFlow = 0
       inPipeHeatloss = 0
       for inPipe in node.inPipes:
@@ -268,8 +283,8 @@ class AnalyzeFlowRate(object):
       logging.debug('Sum of incoming flow is %s and heatloss is %s.', inPipeFlow, inPipeHeatloss)
 
       for pipe in node.outPipes:
-        logging.debug('Calculating flow at pipe id %s.', pipe.getAttribute('id'))
-        if pipe.connectsEndNode.getType() != 'Csapolo':
+        logging.debug('Calculating flow at pipe id %s.', pipe.getId())
+        if pipe.connectsEndNode.getType() != u'Csapoló':
           # The system heatloss on this branch from this node on
           heatlossTillPipe = pipe.connectsEndNode.getAttribute('rendsz_hov') + pipe.getAttribute('hovesztes')
         else:
@@ -277,10 +292,10 @@ class AnalyzeFlowRate(object):
         # Calculating the flow on outgoing branch
         pipeFlow = inPipeFlow * ( heatlossTillPipe / node.getAttribute('rendsz_hov'))
         # Setting result
-        logging.debug('Calculated flow for pipe id %s is %s.', pipe.getAttribute('id'), pipeFlow)
+        logging.debug('Calculated flow for pipe id %s is %s.', pipe.getId(), pipeFlow)
         pipe.setAttribute('terfaram', pipeFlow)
         # We need to check if we reached the pump
-        if pipe.connectsEndNode.getType() != 'Csapolo':
+        if pipe.connectsEndNode.getType() != u'Csapoló':
           # Adding our next node to analyze
           nextNodeCache.append(pipe.connectsEndNode)
     if len(nextNodeCache) > 0:
@@ -293,10 +308,9 @@ class AnalyzePipeDiameter(object):
   def __init__(self, NetworkEnvironment):
     super(AnalyzePipeDiameter, self).__init__()
     self.env = NetworkEnvironment
-    self.MAX_FLOW_SPEED = 1.0 # m/s
   def doAnalyze(self):
     for pipe in self.env.pipesList:
-      logging.debug('Calculating return pipe diameter for pipe id %s.', pipe.getAttribute('id'))
+      logging.debug('Calculating return pipe diameter for pipe id %s.', pipe.getId())
       # Flow pipe calculated flow
       pipeFlow = pipe.getAttribute('terfaram')
       for diameter in self.env.sizes:
@@ -304,7 +318,7 @@ class AnalyzePipeDiameter(object):
         # We need to divide the pipe flow 3.6e6 because it is in dm3/h
         flowSpeed = 4 * (pipeFlow / 3.6e6) / ( pow((diameter / 1000.0), 2) * math.pi )
         logging.debug('Flow speed is %sm/s.', flowSpeed)
-        if flowSpeed < self.MAX_FLOW_SPEED:
+        if flowSpeed < self.env.pipeSpeedLimit:
           logging.debug('Flow speed is between 0.2-1.0 m/s we use this diameter.')
           pipe.setAttribute('vissza_atm', diameter)
           pipe.setAttribute('aram_seb', flowSpeed)
@@ -354,7 +368,6 @@ class AnalyzePressure(object):
   def doAnalyze(self):
     self._pressureLossOnPipe()
     self._createFlowPaths()
-    logging.debug(self.env.pathMatrix)
     self._pressureLossOnPaths()
     self._calculateReferencePathPressure()
     self._calculatePathChoke()
@@ -386,17 +399,28 @@ class AnalyzePressure(object):
     """
     self.env.pathMatrix = []
     for node in self.env.nodesList:
-      if node.getType() == 'Csapolo':
+      if node.getType() == u'Csapoló':
+        if len(self.env.pathMatrix) > 0:
+          for idx, pathItem in enumerate(self.env.pathMatrix):
+            if pathItem[0].getCoordinates().x() > node.getCoordinates().x():
+              spaceIndex = idx
+              break
+            elif len(self.env.pathMatrix) == idx + 1:
+              spaceIndex = idx + 1
+        else:
+          spaceIndex = 0
         pathCache = []
         pathCache.append(node)
         for pipe in node.inPipes:
           self._recursePath(pipe, pathCache)
-        self.env.pathMatrix.append(pathCache)
+        self.env.pathMatrix[spaceIndex:spaceIndex] = [pathCache]
+    for idx, path in enumerate(self.env.pathMatrix):
+      path[0].setAttribute('ag', idx)
   def _recursePath(self, nextPipe, pathCache):
     """Recurses through a path to add the elements to a list"""
     pathCache.append(nextPipe)
     pathCache.append(nextPipe.connectsStartNode)
-    if nextPipe.connectsStartNode.getType() != 'Szivattyu':
+    if nextPipe.connectsStartNode.getType() != 'MTB':
       for pipe in nextPipe.connectsStartNode.inPipes:
         self._recursePath(pipe, pathCache)
   def _calculateReferencePathPressure(self):
