@@ -11,12 +11,8 @@ class NetworkEnvironment(object):
   def __init__(self):
     super(NetworkEnvironment, self).__init__()
     self.registry = qgis.core.QgsMapLayerRegistry.instance()
-    self._createLayers()
-    self._createFeatureIterators()
     self.nodesList = []
     self.pipesList = []
-    self._createObjects()
-    self._createNodePipeRelations()
     self.pipeSizeSet = [10, 12.5, 16, 19, 25, 32, 40] # Set of available pipe diameters in mm
     # Constants to indicate the association state of elements
     self.ASSOC_NOCHECK = 0
@@ -119,7 +115,10 @@ class NetworkEnvironment(object):
   def addValidationErr(self, element):
     # Constructing element data for error list
     # Tuple: (layer's name, id, )
-    msg = [element.qgisLayer.name(), element.getId(), element.getAttribute('tipus')]
+    if element.qgisLayer.name() == 'elemek':
+      msg = [element.qgisLayer.name(), element.getId(), element.getAttribute('tipus')]
+    else:
+      msg = [element.qgisLayer.name(), element.getId(), 'cso']
     self.validationStats['overallStatus'] = 1
     self.validationStats['errElementsCount'] += 1
     self.validationStats['errElements'].append(msg)
@@ -169,9 +168,13 @@ class NetworkEnvironment(object):
     return self.nodeIterator
   def _getPipeIterator(self):
     return self.pipeIterator
-  def rebuildObjects(self):
+  def buildObjects(self):
     self.nodesList = []
     self.pipesList = []
+    self._createLayers()
+    self._createFeatureIterators()
+    self._createLayers()
+    self._createFeatureIterators()
     self._createObjects()
     self._createNodePipeRelations()
   def generateResults(self):
@@ -179,21 +182,24 @@ class NetworkEnvironment(object):
     resultsMatrix = []
     for pipe in self.pipesList:
       resultsMatrix.append([pipe.getId(),
-                            pipe.getAttribute('hoatbocs'),
-                            pipe.getAttribute('holeadas'),
-                            pipe.getAttribute('hovesztes'),
-                            pipe.getAttribute('terfaram'), # 'terfaram' in dm3/h
-                            pipe.getAttribute('vissza_atm'),
-                            pipe.getAttribute('reynolds'),
-                            pipe.getAttribute('cso_surl'),
-                            pipe.getAttribute('nyomas_es')])
+                            '{:.1f}'.format(round(pipe.getAttribute('atmero_cso'), 1)),
+                            '{:.1f}'.format(round(pipe.getAttribute('vissza_atm'), 1)),
+                            '{:.2f}'.format(round(pipe.getAttribute('hoatbocs'), 2)),
+                            '{:.1f}'.format(round(pipe.getAttribute('holeadas'), 1)),
+                            '{:.1f}'.format(round(pipe.getAttribute('hovesztes'), 1)),
+                            '{:.1f}'.format(round(pipe.getAttribute('terfaram'), 1)), # 'terfaram' in l/h (dm3/h)
+                            '{:.2f}'.format(round(pipe.getAttribute('aram_seb'), 2)), # m/s
+                            round(pipe.getAttribute('reynolds'), 0),
+                            '{:.3f}'.format(round(pipe.getAttribute('cso_surl'), 3)),
+                            round(pipe.getAttribute('fajl_nyom'), 0),
+                            round(pipe.getAttribute('nyomas_es'), 0)])
     return resultsMatrix
   def generatePressureResults(self):
     """Creates a 2D matrix of pressure data that can be used by a QTableView object model"""
     pressureResultsMatrix = []
     path = 0
     for pLoss, chokeLoss, chokeKv in zip(self.pathPressureLoss, self.chokePressureLoss, self.chokeKv):
-      pressureResultsMatrix.append([path, pLoss, chokeLoss, chokeKv])
+      pressureResultsMatrix.append([path, round(pLoss), round(chokeLoss), '{:.1f}'.format(round(chokeKv,1))])
       path += 1
     return pressureResultsMatrix
   def generateFlowGraphResults(self):
@@ -202,7 +208,7 @@ class NetworkEnvironment(object):
     for path in self.pathMatrix:
       # We extract the flow value from the second item in the path, which is the
       # first pipe after the tap, this is what we need.
-      flowsList.append(path[1].getAttribute('terfaram'))
+      flowsList.append(float(round(path[1].getAttribute('terfaram'))))
     return flowsList
     
 class AnalyzeHeatLoss(object):
@@ -382,9 +388,13 @@ class AnalyzePressure(object):
       ro = self.env.density
       Vm = pipe.getAttribute('terfaram')
       kvm = pipe.getAttribute('szerelveny')
-
-      deltapm = (Lm * (lambdam / dm) + zetam) * ((pow(wm, 2) * ro) / 2) + pow(Vm / kvm, 2)
+      if kvm == 0:
+        # If kvm is 0, we remove part of the equation, so we don't divide by 0
+        deltapm = (Lm * (lambdam / dm / 1000.0) + zetam) * ((pow(wm, 2) * ro) / 2)
+      else:
+        deltapm = (Lm * (lambdam / dm / 1000.0) + zetam) * ((pow(wm, 2) * ro) / 2) + pow(Vm / 1000.0 / kvm, 2)*1e5
       pipe.setAttribute('nyomas_es', deltapm)
+      pipe.setAttribute('fajl_nyom', deltapm / pipe.getAttribute('hossz'))
   def _pressureLossOnPaths(self):
     self.env.pathPressureLoss = []
     for path in self.env.pathMatrix:

@@ -71,15 +71,20 @@ class ResultsTableModel(QAbstractTableModel):
   def data(self, index, role=Qt.DisplayRole):
     if role == Qt.DisplayRole:
       return self.resultsMatrix[index.row()][index.column()]
+    elif role == Qt.TextAlignmentRole:
+      return Qt.AlignRight
   def headerData(self, section, orientation=Qt.Horizontal, role=Qt.DisplayRole):
     sectionList = [ QtTranslate('result_widget', 'id', None),
+                    QtTranslate('result_widget', 'Dm (mm)', None),
+                    QtTranslate('result_widget', 'δm (mm)', None),
                     QtTranslate('result_widget', 'km (W/mK)', None),
                     QtTranslate('result_widget', 'qm (W/m)', None),
                     QtTranslate('result_widget', 'Qm (W)', None),
-                    QtTranslate('result_widget', 'Vm (dm3/h)', None),
-                    QtTranslate('result_widget', 'δm (mm)', None),
+                    QtTranslate('result_widget', 'Vm (l/h)', None),
+                    QtTranslate('result_widget', 'wm (m6S)', None),
                     QtTranslate('result_widget', 'Rem', None),
                     QtTranslate('result_widget', 'λm', None),
+                    QtTranslate('result_widget', 's\'m (Pa/m)', None),
                     QtTranslate('result_widget', 'dpm (Pa)', None)]
     if role == Qt.DisplayRole and orientation == Qt.Horizontal:
       return sectionList[section]
@@ -97,6 +102,8 @@ class PressureTableModel(QAbstractTableModel):
   def data(self, index, role=Qt.DisplayRole):
     if role == Qt.DisplayRole:
       return self.pressureMatrix[index.row()][index.column()]
+    elif role == Qt.TextAlignmentRole:
+      return Qt.AlignRight
   def headerData(self, section, orientation=Qt.Horizontal, role=Qt.DisplayRole):
     sectionList = [ QtTranslate('result_widget', 'Kör', None),
                     QtTranslate('result_widget', 'deltaPk (Pa)', None), # Pressure loss of path

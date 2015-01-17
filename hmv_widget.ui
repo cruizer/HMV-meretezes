@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>428</width>
+    <width>429</width>
     <height>681</height>
    </rect>
   </property>
@@ -21,7 +21,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="networkVal_tab">
        <attribute name="title">
@@ -224,45 +224,30 @@
        <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
-          <x>0</x>
+          <x>10</x>
           <y>10</y>
-          <width>261</width>
+          <width>381</width>
           <height>168</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
-          <widget class="QPushButton" name="heatlossStart_btn">
+          <widget class="QPushButton" name="theAnalysis_btn">
            <property name="text">
-            <string>Hőveszteség mérés</string>
+            <string>Analízis</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="flowRateStart_btn">
-           <property name="text">
-            <string>Térfogatáram számítás</string>
+          <widget class="QLabel" name="verifyNotification_lbl">
+           <property name="enabled">
+            <bool>true</bool>
            </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="returnPipeDiaStart_btn">
            <property name="text">
-            <string>Visszatérő ági csőátmérő számítás</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#e82517;&quot;&gt;Hálózat ellenőrzés szükséges! Még nem történt hálózat ellenőrzés, vagy a hálózat megváltozott.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pipeDragStart_btn">
-           <property name="text">
-            <string>Csősúrlódási tényező számítás</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pressureLossStart_btn">
-           <property name="text">
-            <string>Kör nyomásesés számítása</string>
+           <property name="wordWrap">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -366,19 +351,6 @@
          </item>
         </layout>
        </widget>
-       <widget class="QPushButton" name="theAnalysis_btn">
-        <property name="geometry">
-         <rect>
-          <x>270</x>
-          <y>20</y>
-          <width>121</width>
-          <height>141</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Analízis</string>
-        </property>
-       </widget>
       </widget>
       <widget class="QWidget" name="settings_tab">
        <attribute name="title">
@@ -413,8 +385,8 @@
        <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
-          <x>30</x>
-          <y>50</y>
+          <x>20</x>
+          <y>200</y>
           <width>297</width>
           <height>118</height>
          </rect>
@@ -502,12 +474,109 @@
          </item>
         </layout>
        </widget>
+       <widget class="QLabel" name="label_14">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>170</y>
+          <width>121</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Kiindulási adatok</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_17">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>50</y>
+          <width>101</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Réteg választás</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="refreshLayers_btn">
+        <property name="geometry">
+         <rect>
+          <x>300</x>
+          <y>60</y>
+          <width>31</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border-image : url(:/refresh/refresh.svg) 0 0 0 0 stretch stretch;</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+       <widget class="QWidget" name="layoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>80</y>
+          <width>271</width>
+          <height>58</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_8">
+           <item>
+            <widget class="QLabel" name="label_15">
+             <property name="text">
+              <string>Elemek QGIS réteg:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_16">
+             <property name="text">
+              <string>Csőhálózat QGIS réteg:</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_9">
+           <item>
+            <widget class="QComboBox" name="nodeLayerSelect_combo"/>
+           </item>
+           <item>
+            <widget class="QComboBox" name="pipeLayerSelect_combo"/>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="Line" name="line_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>150</y>
+          <width>381</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
       </widget>
      </widget>
     </item>
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="refresh.qrc"/>
+ </resources>
  <connections/>
 </ui>

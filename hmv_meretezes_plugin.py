@@ -56,21 +56,15 @@ class HmvPlugin(QObject):
     self.dock.sizeList.setModel(self.sizeListModel)
     self.dock.errElements_table.setModel(self.elementErrTableModel)
     # Analysis buttons are disabled by default
-    self.dock.heatlossStart_btn.setEnabled(False)
-    self.dock.flowRateStart_btn.setEnabled(False)
+    self.dock.theAnalysis_btn.setEnabled(False)
     # We add the dock widget to the QGIS window
     self.iface.addDockWidget( Qt.RightDockWidgetArea, self.dock )
     self.setDefaultValues()
     self.bindConnections()
   def bindConnections(self):
     """Binds actions to GUI object signals"""
-    # Analysis actions
-    QObject.connect(self.dock.heatlossStart_btn, SIGNAL("clicked()"), self.startHeatlossCalc)
-    QObject.connect(self.dock.flowRateStart_btn, SIGNAL("clicked()"), self.startFlowCalc)
+    # Analysis actions 
     QObject.connect(self.dock.validateStart_btn, SIGNAL("clicked()"), self.startNetworkValidation)
-    QObject.connect(self.dock.returnPipeDiaStart_btn, SIGNAL("clicked()"), self.startPipeDiaCalc)
-    QObject.connect(self.dock.pipeDragStart_btn, SIGNAL("clicked()"), self.startPipeDragCalc)
-    QObject.connect(self.dock.pressureLossStart_btn, SIGNAL("clicked()"), self.startPressureCalc)
     QObject.connect(self.dock.theAnalysis_btn, SIGNAL("clicked()"), self.startAllCalc)
     # Settings
     QObject.connect(self.dock.addSize_btn, SIGNAL("clicked()"), self.addSizeToList)
@@ -82,6 +76,9 @@ class HmvPlugin(QObject):
     QObject.connect(self.dock.showResults_btn, SIGNAL("clicked()"), self.openResultsWindow)
     QObject.connect(self.dock.showPressureResults_btn, SIGNAL("clicked()"), self.openPressureResultsWindow)
     QObject.connect(self.dock.showPipeFlowChart_btn, SIGNAL("clicked()"), self.openChartWindow)
+    # Layers
+    QObject.connect(self.netEnv.registry.mapLayersByName('elemek')[0], SIGNAL("dataChanged()"), self.disableAnalysis)
+    QObject.connect(self.netEnv.registry.mapLayersByName('szakaszok')[0], SIGNAL("dataChanged()"), self.disableAnalysis)
   def startAllCalc(self):
     self.startHeatlossCalc()
     self.startFlowCalc()
@@ -128,6 +125,7 @@ class HmvPlugin(QObject):
     for selection in selected:
       self.sizeListModel.removeRows(selection)
   def startNetworkValidation(self):
+      self.netEnv.buildObjects()
       status = self.netEnv.verifyObjectConnections()
       self.dock.checkStatusValue_label.setText(QtTranslate('HmvWidget', self.netEnv.statusCodes[status['overallStatus']], None))
       self.dock.numberOfElementsValue_label.setText(str(status['allElementsCount']))
@@ -136,8 +134,8 @@ class HmvPlugin(QObject):
       self.elementErrTableModel.insertRows(status['errElements'])
       # If network validation is OK enable analysis buttons
       if status['overallStatus'] == 2:
-        self.dock.heatlossStart_btn.setEnabled(True)
-        self.dock.flowRateStart_btn.setEnabled(True)
+        self.dock.theAnalysis_btn.setEnabled(True)
+        self.dock.verifyNotification_lbl.setVisible(False)
   def startHeatlossCalc(self):
     anaHeat = AnalyzeHeatLoss(self.netEnv)
     logging.info('STAGE 1 | Starting heatloss analysis.' \
@@ -145,8 +143,8 @@ class HmvPlugin(QObject):
     anaHeat.doAnalyze()
     logging.info('STAGE 2 | Analyze network heatlos on next nodes in network.')
     anaHeat.analyzeNextNodes()
-    self.dock.totalHeatloss_label.setText(str(self.netEnv.totalNetworkHeatloss))
-    self.dock.circFlow_label.setText(str(self.netEnv.pumpFlow))
+    self.dock.totalHeatloss_label.setText('{:.1f}'.format(round(self.netEnv.totalNetworkHeatloss, 1)))
+    self.dock.circFlow_label.setText('{:.1f}'.format(round(self.netEnv.pumpFlow, 1)))
   def startFlowCalc(self):
     anaFlow = AnalyzeFlowRate(self.netEnv)
     logging.info('STAGE 1 | Starting flow rate analysis.' \
@@ -174,3 +172,6 @@ class HmvPlugin(QObject):
   def startPressureCalc(self):
     calcPress = AnalyzePressure(self.netEnv)
     calcPress.doAnalyze()
+  def disableAnalysis(self):
+    self.dock.theAnalysis_btn.setEnabled(False)
+    self.dock.verifyNotification_lbl.setVisible(True)
