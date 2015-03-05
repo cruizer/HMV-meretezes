@@ -40,12 +40,12 @@ class NodeObject(NetworkObject):
     # Cache variable for listing network heatloss
     self.heatlossCache = []
   def getCoordinates(self):
-      return self.qgisElement.geometry().asPoint()
+    return self.qgisElement.geometry().asPoint()
   def connects(self, otherFeature):
     if otherFeature.getGeometryType() == QGis.WKBLineString:
       if self.getCoordinates() == otherFeature.getCoordinates()[0] or \
-                self.getCoordinates() == otherFeature.getCoordinates()[
-                len(otherFeature.getCoordinates()) - 1]:
+          self.getCoordinates() == otherFeature.getCoordinates()[
+              len(otherFeature.getCoordinates()) - 1]:
         return True
       else:
         return False
@@ -63,7 +63,8 @@ class NodeObject(NetworkObject):
       return None
   def connectsEnd(self, otherFeature):
     if otherFeature.getGeometryType() == QGis.WKBLineString:
-      if self.getCoordinates() == otherFeature.getCoordinates()[len(otherFeature.getCoordinates()) - 1]:
+      if self.getCoordinates() == \
+          otherFeature.getCoordinates()[len(otherFeature.getCoordinates()) - 1]:
         return True
       else:
         return False
@@ -77,7 +78,7 @@ class NodeObject(NetworkObject):
     else:
       previousNodeHeatloss = pipeObject.connectsEndNode.getAttribute('rendsz_hov')
       networkHeatloss = pipeHeatLoss + previousNodeHeatloss
-    
+
     self.heatlossCache.append(networkHeatloss)
     logging.debug('Number of outgoing pipes from node id %s is %s from this, we have %s added to the heatloss cache.',
                   self.getId(), len(self.outPipes), len(self.heatlossCache))
@@ -169,7 +170,7 @@ class PipeObject(NetworkObject):
     Lm = self.getAttribute('hossz')
     # Hoatbocsatasi tenyezo
     heatTrans = math.pi / (
-                (1.0 / (2.0 * lambdam)) * math.log(Dm / dm) + (1.0 / (alfakm * Dm / 1000.0)))
+        (1.0 / (2.0 * lambdam)) * math.log(Dm / dm) + (1.0 / (alfakm * Dm / 1000.0)))
     self.setAttribute('hoatbocs', heatTrans)
     # Holeadas / m
     heatDissipation = heatTrans * (Thmv - Thely)

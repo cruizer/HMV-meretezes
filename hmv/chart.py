@@ -9,7 +9,7 @@
 # may be distributed without limitation.
 
 from __future__ import unicode_literals
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui
 
 import numpy as np
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
@@ -26,12 +26,12 @@ class HMVBaseCanvas(FigureCanvas):
     self.compute_initial_figure()
 
     FigureCanvas.__init__(self, fig)
-    self.setParent(parent)
+    self.setParent(parent) # pylint: disable=E1101
 
-    FigureCanvas.setSizePolicy(self,
-                   QtGui.QSizePolicy.Expanding,
-                   QtGui.QSizePolicy.Expanding)
-    FigureCanvas.updateGeometry(self)
+    FigureCanvas.setSizePolicy(self, # pylint: disable=E1101
+                               QtGui.QSizePolicy.Expanding, # pylint: disable=E1101
+                               QtGui.QSizePolicy.Expanding) # pylint: disable=E1101
+    FigureCanvas.updateGeometry(self) # pylint: disable=E1101
 
   def compute_initial_figure(self):
     pass
@@ -43,11 +43,11 @@ class PipeFlowChartCanvas(HMVBaseCanvas):
     self.flowData = flowData
     super(PipeFlowChartCanvas, self).__init__(parent)
   def compute_initial_figure(self):
-    y_pos = np.arange(len(self.flowData))
+    y_pos = np.arange(len(self.flowData)) # pylint: disable=E1101
 
     self.axes.bar(y_pos, self.flowData, align='center', alpha=0.4)
     self.axes.set_xticks(y_pos)
-    self.axes.set_xticklabels( ['F' + str(nr) for nr in np.arange(len(self.flowData))] )
+    self.axes.set_xticklabels(['F' + str(nr) for nr in np.arange(len(self.flowData))]) # pylint: disable=E1101
     self.axes.set_ylabel('Térfogatáram (dm3/h)')
     self.axes.set_xlabel('Felszálló ágak')
     self.axes.set_title('Felszállók térfogatárama')

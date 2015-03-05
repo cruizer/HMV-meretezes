@@ -3,14 +3,22 @@ import qgis
 import logging
 import math
 from string import Template
-from pipesys_objects import *
+import pipesys_objects
 
 
 class NetworkEnvironment(object):
   """Object to create environment to run calculation"""
   def __init__(self):
     super(NetworkEnvironment, self).__init__()
-    self.registry = qgis.core.QgsMapLayerRegistry.instance()
+    self.registry = qgis.core.QgsMapLayerRegistry.instance() # pylint: disable=E1101
+    self.layers = None
+    self.layerNameList = None
+    self.nodeLayerName = None
+    self.pipeLayerName = None
+    self.nodesLayer = None
+    self.pipesLayer = None
+    self.nodeIterator = None
+    self.pipeIterator = None
     self.nodesList = []
     self.pipesList = []
     self.pipeSizeSet = [10, 12.5, 16, 19, 25, 32, 40] # Set of available pipe diameters in mm
@@ -19,11 +27,11 @@ class NetworkEnvironment(object):
     self.ASSOC_ERR = 1
     self.ASSOC_OK = 2
     # Stores validation status
-    self.validationStats = { 'overallStatus': "Nem ellenőrzött",
-                              'allElementsCount': 0,
-                              'errElementsCount': 0,
-                              'errElements': []}
-    self.statusCodes = { 0: 'Nem ellenőrzött', 1: 'Hibás!', 2: 'OK'}
+    self.validationStats = {'overallStatus': "Nem ellenőrzött",
+                            'allElementsCount': 0,
+                            'errElementsCount': 0,
+                            'errElements': []}
+    self.statusCodes = {0: 'Nem ellenőrzött', 1: 'Hibás!', 2: 'OK'}
     # Default settings
     self.sizes = [10, 12, 16, 19, 25, 32, 40]
     self.density = 983.2 # kg/m3
@@ -43,11 +51,21 @@ class NetworkEnvironment(object):
     self.chokePressureLoss = []
     # Choke kv value for each path in the matrix
     self.chokeKv = []
+  def collectLayers(self):
+    if self.registry.count() > 0:
+      self.layers = self.registry.mapLayers()
+      return [self.layers[key].name() for key in self.layers]
+    else:
+      pass
+  def setNodeLayerName(self, layerName):
+    self.nodeLayerName = layerName
+  def setPipeLayerName(self, layerName):
+    self.pipeLayerName = layerName
   def _createLayers(self):
     # Load *node* layer
-    self.nodesLayer = self.registry.mapLayersByName('elemek')[0]
+    self.nodesLayer = self.registry.mapLayersByName(self.nodeLayerName)[0]
     # Load *pipes* layer
-    self.pipesLayer = self.registry.mapLayersByName('szakaszok')[0]
+    self.pipesLayer = self.registry.mapLayersByName(self.pipeLayerName)[0]
   def _createFeatureIterators(self):
     # Get layer features (elements)
     self.nodeIterator = self.nodesLayer.getFeatures()
@@ -55,9 +73,9 @@ class NetworkEnvironment(object):
     self.pipeIterator = self.pipesLayer.getFeatures()
   def _createObjects(self):
     for node in self._getNodeIterator():
-      self.nodesList.append(NodeObject(node, self._getNodesLayer()))
+      self.nodesList.append(pipesys_objects.NodeObject(node, self._getNodesLayer()))
     for pipe in self._getPipeIterator():
-      self.pipesList.append(PipeObject(pipe, self._getPipesLayer()))
+      self.pipesList.append(pipesys_objects.PipeObject(pipe, self._getPipesLayer()))
   def _createNodePipeRelations(self):
     for node in self.nodesList:
       for pipe in self.pipesList:
@@ -108,14 +126,14 @@ class NetworkEnvironment(object):
         self._organizeVectors(nextNode=pipe.connectsEndNode, currentInPipe=pipe)
   def resetValidationStatus(self):
     """Resets validation stat dictionary to initial values"""
-    self.validationStats = { 'overallStatus': 0,
-                              'allElementsCount': len(self.pipesList) + len(self.nodesList),
-                              'errElementsCount': 0,
-                              'errElements': []}
+    self.validationStats = {'overallStatus': 0,
+                            'allElementsCount': len(self.pipesList) + len(self.nodesList),
+                            'errElementsCount': 0,
+                            'errElements': []}
   def addValidationErr(self, element):
     # Constructing element data for error list
     # Tuple: (layer's name, id, )
-    if element.qgisLayer.name() == 'elemek':
+    if element.qgisLayer.name() == self.nodeLayerName:
       msg = [element.qgisLayer.name(), element.getId(), element.getAttribute('tipus')]
     else:
       msg = [element.qgisLayer.name(), element.getId(), 'cso']
@@ -187,8 +205,10 @@ class NetworkEnvironment(object):
                             '{:.2f}'.format(round(pipe.getAttribute('hoatbocs'), 2)),
                             '{:.1f}'.format(round(pipe.getAttribute('holeadas'), 1)),
                             '{:.1f}'.format(round(pipe.getAttribute('hovesztes'), 1)),
-                            '{:.1f}'.format(round(pipe.getAttribute('terfaram'), 1)), # 'terfaram' in l/h (dm3/h)
-                            '{:.2f}'.format(round(pipe.getAttribute('aram_seb'), 2)), # m/s
+                            # 'terfaram' in l/h (dm3/h)
+                            '{:.1f}'.format(round(pipe.getAttribute('terfaram'), 1)),
+                            # m/s
+                            '{:.2f}'.format(round(pipe.getAttribute('aram_seb'), 2)),
                             round(pipe.getAttribute('reynolds'), 0),
                             '{:.3f}'.format(round(pipe.getAttribute('cso_surl'), 3)),
                             round(pipe.getAttribute('fajl_nyom'), 0),
@@ -198,8 +218,11 @@ class NetworkEnvironment(object):
     """Creates a 2D matrix of pressure data that can be used by a QTableView object model"""
     pressureResultsMatrix = []
     path = 0
-    for pLoss, chokeLoss, chokeKv in zip(self.pathPressureLoss, self.chokePressureLoss, self.chokeKv):
-      pressureResultsMatrix.append([path, round(pLoss), round(chokeLoss), '{:.1f}'.format(round(chokeKv,1))])
+    for pLoss, chokeLoss, chokeKv in zip(self.pathPressureLoss,
+                                         self.chokePressureLoss,
+                                         self.chokeKv):
+      pressureResultsMatrix.append([path, round(pLoss),
+                                    round(chokeLoss), '{:.1f}'.format(round(chokeKv, 1))])
       path += 1
     return pressureResultsMatrix
   def generateFlowGraphResults(self):
@@ -210,12 +233,12 @@ class NetworkEnvironment(object):
       # first pipe after the tap, this is what we need.
       flowsList.append(float(round(path[1].getAttribute('terfaram'))))
     return flowsList
-    
+
 class AnalyzeHeatLoss(object):
   """Carries out heat loss analysis of a pipe network"""
-  def __init__(self, NetworkEnvironment):
+  def __init__(self, NetEnv):
     super(AnalyzeHeatLoss, self).__init__()
-    self.env = NetworkEnvironment
+    self.env = NetEnv
     self.nextNodes = []
   def _calculatePipeHeatloss(self):
     for pipe in self.env.pipesList:
@@ -224,24 +247,26 @@ class AnalyzeHeatLoss(object):
     nextNodeCache = []
     for node in self.nextNodes:
       for pipe in node.inPipes:
-          logging.debug('Adding network heatloss coming in from pipe %s to node %s',
+        logging.debug('Adding network heatloss coming in from pipe %s to node %s',
+                      pipe.getId(), pipe.connectsStartNode.getId())
+        if pipe.connectsStartNode.calculateNetworkHeatloss(pipe, False) == True:
+          logging.debug('Network heatloss is completely calculated for node %s',
+                        pipe.connectsStartNode.getId())
+          if pipe.connectsStartNode.getType() != 'MTB':
+            logging.debug('The node on the other end of pipe %s is not' \
+                          ' a storage tank, will calculate node %s next round',
                           pipe.getId(), pipe.connectsStartNode.getId())
-          if pipe.connectsStartNode.calculateNetworkHeatloss(pipe, False) == True:
-            logging.debug('Network heatloss is completely calculated for node %s',
-                          pipe.connectsStartNode.getId())
-            if pipe.connectsStartNode.getType() != 'MTB':
-              logging.debug('The node on the other end of pipe %s is not' \
-                            ' a storage tank, will calculate node %s next round',
-                            pipe.getId(), pipe.connectsStartNode.getId())
-              nextNodeCache.append(pipe.connectsStartNode)
-            else:
-              self.env.totalNetworkHeatloss = pipe.connectsStartNode.getAttribute('rendsz_hov') # W
-              self.env.pumpFlow = self.env.totalNetworkHeatloss / ( self.env.density * self.env.specificHeat * self.env.deltaTheta ) * 3.6e6# dm3/h
+            nextNodeCache.append(pipe.connectsStartNode)
+          else:
+            self.env.totalNetworkHeatloss = pipe.connectsStartNode.getAttribute('rendsz_hov') # W
+            self.env.pumpFlow = self.env.totalNetworkHeatloss / \
+                                (self.env.density * self.env.specificHeat * \
+                                self.env.deltaTheta) * 3.6e6# dm3/h
 
     if len(nextNodeCache) > 0:
       self.nextNodes = nextNodeCache
       self.analyzeNextNodes()
-      
+
   def doAnalyze(self):
     self._calculatePipeHeatloss()
 
@@ -252,15 +277,15 @@ class AnalyzeHeatLoss(object):
           logging.debug('Analyzing pipe %s id coming IN to tap', pipe.getId())
           if pipe.connectsStartNode.calculateNetworkHeatloss(pipe, True) == True:
             logging.debug('Network heatloss is completely calculated for node %s',
-                            pipe.connectsStartNode.getId())
+                          pipe.connectsStartNode.getId())
             self.nextNodes.append(pipe.connectsStartNode)
 
 class AnalyzeFlowRate(object):
   """Calculates the volume flow rate based on remaining network heat
   loss of a branch."""
-  def __init__(self, NetworkEnvironment):
+  def __init__(self, NetEnv):
     super(AnalyzeFlowRate, self).__init__()
-    self.env = NetworkEnvironment
+    self.env = NetEnv
     self.nextNodes = []
   def doAnalyze(self):
     for node in self.env.nodesList:
@@ -292,11 +317,12 @@ class AnalyzeFlowRate(object):
         logging.debug('Calculating flow at pipe id %s.', pipe.getId())
         if pipe.connectsEndNode.getType() != 'Csapolo':
           # The system heatloss on this branch from this node on
-          heatlossTillPipe = pipe.connectsEndNode.getAttribute('rendsz_hov') + pipe.getAttribute('hovesztes')
+          heatlossTillPipe = pipe.connectsEndNode.getAttribute('rendsz_hov') + \
+                             pipe.getAttribute('hovesztes')
         else:
           heatlossTillPipe = pipe.getAttribute('hovesztes')
         # Calculating the flow on outgoing branch
-        pipeFlow = inPipeFlow * ( heatlossTillPipe / node.getAttribute('rendsz_hov'))
+        pipeFlow = inPipeFlow * (heatlossTillPipe / node.getAttribute('rendsz_hov'))
         # Setting result
         logging.debug('Calculated flow for pipe id %s is %s.', pipe.getId(), pipeFlow)
         pipe.setAttribute('terfaram', pipeFlow)
@@ -311,9 +337,9 @@ class AnalyzeFlowRate(object):
 class AnalyzePipeDiameter(object):
   """Calculates the diameter of return flow pipes based on flow rate
   and target flow speed"""
-  def __init__(self, NetworkEnvironment):
+  def __init__(self, NetEnv):
     super(AnalyzePipeDiameter, self).__init__()
-    self.env = NetworkEnvironment
+    self.env = NetEnv
   def doAnalyze(self):
     for pipe in self.env.pipesList:
       logging.debug('Calculating return pipe diameter for pipe id %s.', pipe.getId())
@@ -322,7 +348,7 @@ class AnalyzePipeDiameter(object):
       for diameter in self.env.sizes:
         logging.debug('Checking if pipe diameter of %smm is good.', diameter)
         # We need to divide the pipe flow 3.6e6 because it is in dm3/h
-        flowSpeed = 4 * (pipeFlow / 3.6e6) / ( pow((diameter / 1000.0), 2) * math.pi )
+        flowSpeed = 4 * (pipeFlow / 3.6e6) / (pow((diameter / 1000.0), 2) * math.pi)
         logging.debug('Flow speed is %sm/s.', flowSpeed)
         if flowSpeed < self.env.pipeSpeedLimit:
           logging.debug('Flow speed is between 0.2-1.0 m/s we use this diameter.')
@@ -332,19 +358,19 @@ class AnalyzePipeDiameter(object):
 
 class AnalyzePipeDrag(object):
   """Calculates the drag effect of the pipe"""
-  def __init__(self, NetworkEnvironment):
+  def __init__(self, NetEnv):
     super(AnalyzePipeDrag, self).__init__()
-    self.env = NetworkEnvironment
+    self.env = NetEnv
     self.KINEMATICAL_VISCOSITY = 5e-7
     # Lambda zero
     self.DRAG_INITIAL = 0.02
   def calculateReynoldsNumber(self, flowSpeed, diameter):
-    return flowSpeed * ( diameter / 1000.0 ) / self.KINEMATICAL_VISCOSITY
+    return flowSpeed * (diameter / 1000.0) / self.KINEMATICAL_VISCOSITY
   def doAnalyze(self):
     for pipe in self.env.pipesList:
       re = self.calculateReynoldsNumber(
-              pipe.getAttribute('aram_seb'), # m/s
-              pipe.getAttribute('vissza_atm')) # mm
+          pipe.getAttribute('aram_seb'), # m/s
+          pipe.getAttribute('vissza_atm')) # mm
       pipe.setAttribute('reynolds', re)
       # IF the flow is laminar
       if re <= 2300:
@@ -352,13 +378,14 @@ class AnalyzePipeDrag(object):
       # IF the flow is non-laminar
       elif re > 2300:
         drag = self._calcNLDrag(re,
-                              self.DRAG_INITIAL,
-                              pipe.getAttribute('cso_erdess'),
-                              pipe.getAttribute('vissza_atm'))
+                                self.DRAG_INITIAL,
+                                pipe.getAttribute('cso_erdess'),
+                                pipe.getAttribute('vissza_atm'))
       pipe.setAttribute('cso_surl', drag)
   def _calcNLDrag(self, re, dragPrev, roughness, diameter):
     # Non-laminar drag calculation
-    drag = 1 / pow((-2 * math.log10((2.51 / (re * math.sqrt(dragPrev))) + roughness / (3.71 * diameter) )), 2)
+    drag = 1 / pow((-2 * math.log10((2.51 / (re * math.sqrt(dragPrev))) + \
+                   roughness / (3.71 * diameter))), 2)
     # IF the difference between the previous and current drag calculation
     # is less than 0.001 we return the calculated drag
     if drag - dragPrev < 0.0001:
@@ -368,9 +395,9 @@ class AnalyzePipeDrag(object):
       return self._calcNLDrag(re, drag, roughness, diameter)
 class AnalyzePressure(object):
   """Calculates the pressure loss on each circulation path"""
-  def __init__(self, NetworkEnvironment):
+  def __init__(self, NetEnv):
     super(AnalyzePressure, self).__init__()
-    self.env = NetworkEnvironment
+    self.env = NetEnv
   def doAnalyze(self):
     self._pressureLossOnPipe()
     self._createFlowPaths()
@@ -392,7 +419,8 @@ class AnalyzePressure(object):
         # If kvm is 0, we remove part of the equation, so we don't divide by 0
         deltapm = (Lm * (lambdam / dm / 1000.0) + zetam) * ((pow(wm, 2) * ro) / 2)
       else:
-        deltapm = (Lm * (lambdam / dm / 1000.0) + zetam) * ((pow(wm, 2) * ro) / 2) + pow(Vm / 1000.0 / kvm, 2)*1e5
+        deltapm = (Lm * (lambdam / dm / 1000.0) + zetam) * ((pow(wm, 2) * ro) / 2) + \
+                  pow(Vm / 1000.0 / kvm, 2)*1e5
       pipe.setAttribute('nyomas_es', deltapm)
       pipe.setAttribute('fajl_nyom', deltapm / pipe.getAttribute('hossz'))
   def _pressureLossOnPaths(self):
@@ -400,12 +428,13 @@ class AnalyzePressure(object):
     for path in self.env.pathMatrix:
       pressureLoss = 0
       for item in path:
-        if type(item) is PipeObject:
+        if type(item) is pipesys_objects.PipeObject:
           pressureLoss += item.getAttribute('nyomas_es')
       self.env.pathPressureLoss.append(pressureLoss)
   def _createFlowPaths(self):
     """Creates a matrix of flow paths with their respective elements
-    ATTENTION: pathMatrix is a mixed set of NodeObjects and PipeObjects!
+    ATTENTION: pathMatrix is a mixed set of pipesys_objects.NodeObjects and
+    pipesys_objects.PipeObjects!
     """
     self.env.pathMatrix = []
     for node in self.env.nodesList:
@@ -441,5 +470,6 @@ class AnalyzePressure(object):
     for index, pathLoss in enumerate(self.env.pathPressureLoss):
       chokePrLoss = self.env.referencePathPressure - pathLoss
       self.env.chokePressureLoss.append(chokePrLoss)
-      self.env.chokeKv.append(self.env.pathMatrix[index][1].getAttribute('terfaram') / math.sqrt(chokePrLoss))
+      self.env.chokeKv.append(self.env.pathMatrix[index][1].getAttribute('terfaram') / \
+          math.sqrt(chokePrLoss))
 

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'hmv_widget.ui'
 #
-# Created: Thu Jan 15 21:57:03 2015
+# Created: Sat Jan 17 15:04:27 2015
 #      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -136,6 +136,7 @@ class Ui_HmvWidget(QtGui.QDockWidget):
         self.theAnalysis_btn.setObjectName(_fromUtf8("theAnalysis_btn"))
         self.verticalLayout_3.addWidget(self.theAnalysis_btn)
         self.verifyNotification_lbl = QtGui.QLabel(self.layoutWidget2)
+        self.verifyNotification_lbl.setEnabled(True)
         self.verifyNotification_lbl.setWordWrap(True)
         self.verifyNotification_lbl.setObjectName(_fromUtf8("verifyNotification_lbl"))
         self.verticalLayout_3.addWidget(self.verifyNotification_lbl)
@@ -201,7 +202,7 @@ class Ui_HmvWidget(QtGui.QDockWidget):
         self.saveSettings_btn.setObjectName(_fromUtf8("saveSettings_btn"))
         self.horizontalLayout_4.addWidget(self.saveSettings_btn)
         self.layoutWidget6 = QtGui.QWidget(self.settings_tab)
-        self.layoutWidget6.setGeometry(QtCore.QRect(30, 50, 297, 118))
+        self.layoutWidget6.setGeometry(QtCore.QRect(20, 200, 297, 118))
         self.layoutWidget6.setObjectName(_fromUtf8("layoutWidget6"))
         self.horizontalLayout_5 = QtGui.QHBoxLayout(self.layoutWidget6)
         self.horizontalLayout_5.setMargin(0)
@@ -251,12 +252,52 @@ class Ui_HmvWidget(QtGui.QDockWidget):
         self.label_13.setObjectName(_fromUtf8("label_13"))
         self.verticalLayout_7.addWidget(self.label_13)
         self.horizontalLayout_5.addLayout(self.verticalLayout_7)
+        self.label_14 = QtGui.QLabel(self.settings_tab)
+        self.label_14.setGeometry(QtCore.QRect(20, 170, 121, 16))
+        self.label_14.setObjectName(_fromUtf8("label_14"))
+        self.label_17 = QtGui.QLabel(self.settings_tab)
+        self.label_17.setGeometry(QtCore.QRect(20, 50, 101, 16))
+        self.label_17.setObjectName(_fromUtf8("label_17"))
+        self.refreshLayers_btn = QtGui.QPushButton(self.settings_tab)
+        self.refreshLayers_btn.setGeometry(QtCore.QRect(300, 60, 31, 31))
+        self.refreshLayers_btn.setStyleSheet(_fromUtf8("border-image : url(:/refresh/refresh.svg) 0 0 0 0 stretch stretch;"))
+        self.refreshLayers_btn.setText(_fromUtf8(""))
+        self.refreshLayers_btn.setObjectName(_fromUtf8("refreshLayers_btn"))
+        self.layoutWidget7 = QtGui.QWidget(self.settings_tab)
+        self.layoutWidget7.setGeometry(QtCore.QRect(20, 80, 271, 58))
+        self.layoutWidget7.setObjectName(_fromUtf8("layoutWidget7"))
+        self.horizontalLayout_6 = QtGui.QHBoxLayout(self.layoutWidget7)
+        self.horizontalLayout_6.setMargin(0)
+        self.horizontalLayout_6.setObjectName(_fromUtf8("horizontalLayout_6"))
+        self.verticalLayout_8 = QtGui.QVBoxLayout()
+        self.verticalLayout_8.setObjectName(_fromUtf8("verticalLayout_8"))
+        self.label_15 = QtGui.QLabel(self.layoutWidget7)
+        self.label_15.setObjectName(_fromUtf8("label_15"))
+        self.verticalLayout_8.addWidget(self.label_15)
+        self.label_16 = QtGui.QLabel(self.layoutWidget7)
+        self.label_16.setObjectName(_fromUtf8("label_16"))
+        self.verticalLayout_8.addWidget(self.label_16)
+        self.horizontalLayout_6.addLayout(self.verticalLayout_8)
+        self.verticalLayout_9 = QtGui.QVBoxLayout()
+        self.verticalLayout_9.setObjectName(_fromUtf8("verticalLayout_9"))
+        self.nodeLayerSelect_combo = QtGui.QComboBox(self.layoutWidget7)
+        self.nodeLayerSelect_combo.setObjectName(_fromUtf8("nodeLayerSelect_combo"))
+        self.verticalLayout_9.addWidget(self.nodeLayerSelect_combo)
+        self.pipeLayerSelect_combo = QtGui.QComboBox(self.layoutWidget7)
+        self.pipeLayerSelect_combo.setObjectName(_fromUtf8("pipeLayerSelect_combo"))
+        self.verticalLayout_9.addWidget(self.pipeLayerSelect_combo)
+        self.horizontalLayout_6.addLayout(self.verticalLayout_9)
+        self.line_2 = QtGui.QFrame(self.settings_tab)
+        self.line_2.setGeometry(QtCore.QRect(10, 150, 381, 16))
+        self.line_2.setFrameShape(QtGui.QFrame.HLine)
+        self.line_2.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line_2.setObjectName(_fromUtf8("line_2"))
         self.tabs_Wdg.addTab(self.settings_tab, _fromUtf8(""))
         self.verticalLayout_2.addWidget(self.tabs_Wdg)
         HmvWidget.setWidget(self.dockWidgetContents)
 
         self.retranslateUi(HmvWidget)
-        self.tabs_Wdg.setCurrentIndex(2)
+        self.tabs_Wdg.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(HmvWidget)
 
     def retranslateUi(self, HmvWidget):
@@ -298,5 +339,10 @@ class Ui_HmvWidget(QtGui.QDockWidget):
         self.label_7.setText(_translate("HmvWidget", "J/kgK", None))
         self.label_5.setText(_translate("HmvWidget", "K", None))
         self.label_13.setText(_translate("HmvWidget", "m/s", None))
+        self.label_14.setText(_translate("HmvWidget", "Kiindulási adatok", None))
+        self.label_17.setText(_translate("HmvWidget", "Réteg választás", None))
+        self.label_15.setText(_translate("HmvWidget", "Elemek QGIS réteg:", None))
+        self.label_16.setText(_translate("HmvWidget", "Csőhálózat QGIS réteg:", None))
         self.tabs_Wdg.setTabText(self.tabs_Wdg.indexOf(self.settings_tab), _translate("HmvWidget", "Beállítások", None))
 
+import refresh_rc
