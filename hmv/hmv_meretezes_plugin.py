@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from PyQt4.QtCore import Qt, QObject, SIGNAL # pylint: disable=E0611
-from PyQt4.QtGui import QAction # pylint: disable=E0611
-
+from PyQt4.QtGui import QAction, QMessageBox # pylint: disable=E0611
+import qgis.core
 import logging
 
 from hmv_widget import Ui_HmvWidget
@@ -12,6 +12,8 @@ from hmv_meretezes import NetworkEnvironment, AnalyzeHeatLoss, AnalyzeFlowRate,\
                           AnalyzePipeDiameter, AnalyzePipeDrag, AnalyzePressure
 from hmv_meretezes_models import SizeListModel, ElementErrorTableModel, ResultsTableModel,\
                                  PressureTableModel
+import hmv_symbol_manager
+import datasource_manager
 from qt_utility import QtTranslate
 # initialize Qt resources from file resouces.py
 # import resources
@@ -92,6 +94,10 @@ class HmvPlugin(QObject):
                     self.netEnv.setNodeLayerName)
     QObject.connect(self.dock.pipeLayerSelect_combo, SIGNAL("activated(QString)"), # pylint: disable=E1101
                     self.netEnv.setPipeLayerName)
+    QObject.connect(self.dock.formatLayers_btn, SIGNAL("clicked()"), self.formatLayerChoice)
+    QObject.connect(self.dock.createNewLayer_btn, SIGNAL('clicked()'), self.createNewLayer)
+    QObject.connect(self.dock.autoDbFileName_checkbox, SIGNAL('stateChanged(int)'), self.dbLayerFileToggle)
+    QObject.connect(self.dock.newLayerName_txtField, SIGNAL('editingFinished()'), self.autoSetDbLayerFileField)
   def startAllCalc(self):
     self.startHeatlossCalc()
     self.startFlowCalc()
@@ -127,6 +133,10 @@ class HmvPlugin(QObject):
     self.dock.specificHeat_txtField.setText(str(self.netEnv.specificHeat))
     self.dock.deltaTheta_txtField.setText(str(self.netEnv.deltaTheta))
     self.dock.pipeSpeedLimit_txtField.setText(str(self.netEnv.pipeSpeedLimit))
+    # New layer creation interface
+    self.dock.layerWorkingDirectory_txtField.setText('/Users/cruizer/PythonProjects/kristofQgis/map/auto/')
+    self.dock.newLayerDbFile_txtField.setReadOnly(False)
+    # Working layer selection interface
     self.populateLayerChoice()
   def populateLayerChoice(self):
     # Populating layer choice combo
@@ -134,6 +144,9 @@ class HmvPlugin(QObject):
     self.dock.nodeLayerSelect_combo.addItems(self.netEnv.collectLayers())
     self.dock.pipeLayerSelect_combo.clear()
     self.dock.pipeLayerSelect_combo.addItems(self.netEnv.collectLayers())
+  def formatLayerChoice(self):
+    hmv_symbol_manager.setupNodeLayer(self.dock.nodeLayerSelect_combo.currentText())
+    hmv_symbol_manager.setupPipeLayer(self.dock.pipeLayerSelect_combo.currentText())
   def saveSettings(self):
     self.netEnv.density = float(self.dock.density_txtField.text())
     self.netEnv.specificHeat = float(self.dock.specificHeat_txtField.text())
@@ -201,6 +214,53 @@ class HmvPlugin(QObject):
   def startPressureCalc(self):
     calcPress = AnalyzePressure(self.netEnv)
     calcPress.doAnalyze()
+    
+
   def disableAnalysis(self):
     self.dock.theAnalysis_btn.setEnabled(False)
     self.dock.verifyNotification_lbl.setVisible(True)
+    
+
+  def autoSetDbLayerFileField(self):
+    self.dock.newLayerDbFile_txtField.setText('{}.sqlite'.format(
+                                                    self.dock.newLayerName_txtField.text()
+                                              )
+    )
+
+
+  def dbLayerFileToggle(self, status):
+    """Disable layer file name field if determined by layer name
+    enable if not.
+    """
+    if status == Qt.Checked:
+      self.autoSetDbLayerFileField()
+      self.dock.newLayerDbFile_txtField.setReadOnly(True)
+    elif status == Qt.Unchecked:  
+      self.dock.newLayerDbFile_txtField.setReadOnly(False)
+
+
+  def createNewLayer(self):
+    """Create a new datasource and layer, add to registry if needed"""
+    try:
+        dsPath = datasource_manager.createLayer(self.dock.newLayerName_txtField.text(),
+                                       self.dock.newLayerDbFile_txtField.text(),
+                                       self.dock.layerWorkingDirectory_txtField.text(),
+                                       self.dock.newLayerType_combo.currentText())
+    except OSError as err:
+        # Working dir doesn't exist or datasource file exists
+        mBox = QMessageBox()
+        mBox.setText('Datasource error: {}'.format(err))
+        mBox.setIcon(QMessageBox.Critical)
+        mBox.exec_()
+    else:
+        if self.dock.newLayerAddToRegistry_checkbox.isChecked() == True:
+            uri = qgis.core.QgsDataSourceURI()
+            uri.setDatabase(dsPath)
+            schema = ''
+            table = self.dock.newLayerName_txtField.text()
+            geom_column = 'GEOMETRY'
+            uri.setDataSource(schema, table, geom_column)
+
+            display_name = self.dock.newLayerName_txtField.text()
+            vlayer = qgis.core.QgsVectorLayer(uri.uri(), display_name, 'spatialite')
+            qgis.core.QgsMapLayerRegistry.instance().addMapLayer(vlayer)

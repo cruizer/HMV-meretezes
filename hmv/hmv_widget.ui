@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>429</width>
-    <height>681</height>
+    <height>730</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="networkVal_tab">
        <attribute name="title">
@@ -503,8 +503,8 @@
        <widget class="QPushButton" name="refreshLayers_btn">
         <property name="geometry">
          <rect>
-          <x>300</x>
-          <y>60</y>
+          <x>130</x>
+          <y>40</y>
           <width>31</width>
           <height>31</height>
          </rect>
@@ -521,8 +521,8 @@
          <rect>
           <x>20</x>
           <y>80</y>
-          <width>271</width>
-          <height>58</height>
+          <width>375</width>
+          <height>71</height>
          </rect>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -554,6 +554,17 @@
            </item>
           </layout>
          </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_10">
+           <item>
+            <widget class="QPushButton" name="formatLayers_btn">
+             <property name="text">
+              <string>Formázás</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
         </layout>
        </widget>
        <widget class="Line" name="line_2">
@@ -567,6 +578,162 @@
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_18">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>350</y>
+          <width>81</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Új HMV réteg</string>
+        </property>
+       </widget>
+       <widget class="Line" name="line_3">
+        <property name="geometry">
+         <rect>
+          <x>17</x>
+          <y>330</y>
+          <width>371</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+       <widget class="QWidget" name="horizontalLayoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>380</y>
+          <width>371</width>
+          <height>162</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_11">
+           <item>
+            <widget class="QLabel" name="label_19">
+             <property name="text">
+              <string>Réteg név</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_20">
+             <property name="text">
+              <string>Adatbázis file név</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_23">
+             <property name="text">
+              <string>File név réteg név szerint?</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_21">
+             <property name="text">
+              <string>Réteg típus</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_22">
+             <property name="text">
+              <string>Hozzáadás a réteg listához?</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_12">
+           <item>
+            <widget class="QLineEdit" name="newLayerName_txtField"/>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="newLayerDbFile_txtField"/>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="autoDbFileName_checkbox">
+             <property name="text">
+              <string/>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="newLayerType_combo">
+             <item>
+              <property name="text">
+               <string>szakaszok</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>elemek</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="newLayerAddToRegistry_checkbox">
+             <property name="text">
+              <string/>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="horizontalLayoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>600</y>
+          <width>341</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_10">
+         <item>
+          <widget class="QLabel" name="label_24">
+           <property name="text">
+            <string>Réteg munkakönyvtár</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="layerWorkingDirectory_txtField"/>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QPushButton" name="createNewLayer_btn">
+        <property name="geometry">
+         <rect>
+          <x>280</x>
+          <y>560</y>
+          <width>110</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Létrehoz</string>
         </property>
        </widget>
       </widget>
