@@ -196,7 +196,7 @@ class HmvPlugin(QObject):
     anaFlow.analyzeNextNodes()
   def configureLogging(self):
     """Configures the logging env"""
-    logging.basicConfig(filename='/Users/cruizer/Documents/kristofQgis/plugin.log',
+    logging.basicConfig(filename='/Users/cruizer/PythonProjects/kristofQgis/plugin.log',
                         level=logging.DEBUG,
                         format='%(asctime)s %(levelname)s:%(message)s')
   def startPipeDiaCalc(self):
