@@ -18,7 +18,7 @@ def createLayer(layerName, fileName, workingDir, layerType):
             return None
         else:
             # OK, use existing file as a datasource
-            datasource = driver.Open(layerFilePath)
+            datasource = driver.Open(layerFilePath, True)
 
     else:
         datasource = driver.CreateDataSource(layerFilePath, options=['SPATIALITE=YES'])
