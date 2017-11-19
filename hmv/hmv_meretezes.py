@@ -51,12 +51,17 @@ class NetworkEnvironment(object):
     self.chokePressureLoss = []
     # Choke kv value for each path in the matrix
     self.chokeKv = []
-  def collectLayers(self):
+  def collectLayers(self, layerGeo):
     if self.registry.count() > 0:
       self.layers = self.registry.mapLayers()
-      return [self.layers[key].name() for key in self.layers]
+      collectedLayers = []
+      for key in self.layers:
+        layerItem = self.layers[key]
+        if isinstance(layerItem, qgis.core.QgsVectorLayer) and layerItem.wkbType() == layerGeo:
+          collectedLayers.append(layerItem.name())
+      return collectedLayers
     else:
-      pass
+      return []
   def setNodeLayerName(self, layerName):
     self.nodeLayerName = layerName
   def setPipeLayerName(self, layerName):
