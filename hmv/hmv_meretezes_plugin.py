@@ -222,10 +222,11 @@ class HmvPlugin(QObject):
     
 
   def autoSetDbLayerFileField(self):
-    self.dock.newLayerDbFile_txtField.setText('{}.sqlite'.format(
-                                                    self.dock.newLayerName_txtField.text()
-                                              )
-    )
+    if self.dock.autoDbFileName_checkbox.isChecked() == True:
+      self.dock.newLayerDbFile_txtField.setText('{}.sqlite'.format(
+                                                      self.dock.newLayerName_txtField.text()
+                                                )
+      )
 
 
   def dbLayerFileToggle(self, status):
