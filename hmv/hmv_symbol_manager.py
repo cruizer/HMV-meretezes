@@ -15,9 +15,9 @@ def createPipeSymbols(baseLayer):
     network_noverify_line = simple_line_layer.clone()
     network_noverify_line.setColor(QtGui.QColor(197, 185, 16))
     # Rules data
-    pipe_rules = (('Hálózat hiba', '"assoc_err" = 1', network_fail_line),
-                  ('Hálózat OK', '"assoc_err" = 2', network_ok_line),
-                  ('Hálózat nem ellenőrzött', '"assoc_err" = 0', network_noverify_line)
+    pipe_rules = ((u'Hálózat hiba', '"assoc_err" = 1', network_fail_line),
+                  (u'Hálózat OK', '"assoc_err" = 2', network_ok_line),
+                  (u'Hálózat nem ellenőrzött', '"assoc_err" = 0', network_noverify_line)
     )
     # Create renderer
     symbol = qgis.core.QgsSymbolV2.defaultSymbol(baseLayer.geometryType())
@@ -55,10 +55,10 @@ def createNodeSymbols(baseLayer):
     bad_marker.setSize(4)
     bad_marker.setColor(QtGui.QColor(237, 0, 8))
     # Rules data
-    node_rules = (('Szivattyu', '"tipus" = \'Szivattyu\'', pump_marker_layer),
-                  ('Halozat nem ellenorzott', '"assoc_err" = 0', not_verified_marker),
-                  ('Halozat OK', '"assoc_err" = 2', ok_marker),
-                  ('Halozat hiba', '"assoc_err" = 1', bad_marker)
+    node_rules = ((u'Szivattyú', '"tipus" = \'Szivattyu\'', pump_marker_layer),
+                  (u'Hálózat nem ellenőrzött', '"assoc_err" = 0', not_verified_marker),
+                  (u'Hálózat OK', '"assoc_err" = 2', ok_marker),
+                  (u'Hálózat hiba', '"assoc_err" = 1', bad_marker)
     )
     # Create renderer
     symbol = qgis.core.QgsSymbolV2.defaultSymbol(baseLayer.geometryType())
