@@ -1,6 +1,11 @@
 #!/bin/bash
 currenttime=$(date '+%Y-%m-%d_%H-%M-%S')
-builddir=$(pwd)'/../build/build_'$currenttime
+projdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null && pwd )"
+if [ ! -f "$projdir/hmv_meretezes_plugin.py" ];then
+    echo "ERROR: this script needs to be located in the project directory!"
+    exit 1
+fi
+builddir="$projdir"'/../build/build_'$currenttime
 plugindir=~/.qgis2/python/plugins/hmv/
 if [ ! -f hmv.ini ]; then
 	echo "No ini file, creating..."
