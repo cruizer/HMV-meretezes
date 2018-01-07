@@ -3,6 +3,7 @@ from PyQt4.QtCore import Qt, QObject, SIGNAL # pylint: disable=E0611
 from PyQt4.QtGui import QAction, QMessageBox # pylint: disable=E0611
 import qgis.core
 import logging
+import ConfigParser
 
 from hmv_widget import Ui_HmvWidget
 from hmv_results import Ui_result_widget
@@ -24,6 +25,8 @@ class HmvPlugin(QObject):
   """
   def __init__(self, iface):
     super(HmvPlugin, self).__init__()
+    self.iniConfig = ConfigParser.ConfigParser()
+    self.iniConfig.read('/home/cruizer/.qgis2/python/plugins/hmv/hmv.ini')
     # Reference to the QGIS Qt environment
     self.iface = iface
     self.dock = None
@@ -134,7 +137,7 @@ class HmvPlugin(QObject):
     self.dock.deltaTheta_txtField.setText(str(self.netEnv.deltaTheta))
     self.dock.pipeSpeedLimit_txtField.setText(str(self.netEnv.pipeSpeedLimit))
     # New layer creation interface
-    self.dock.layerWorkingDirectory_txtField.setText('/Users/cruizer/PythonProjects/kristofQgis/map/auto/')
+    self.dock.layerWorkingDirectory_txtField.setText(self.iniConfig.get('hmv', 'workdir'))
     self.dock.newLayerDbFile_txtField.setReadOnly(False)
     # Working layer selection interface
     self.populateLayerChoice()
@@ -196,7 +199,7 @@ class HmvPlugin(QObject):
     anaFlow.analyzeNextNodes()
   def configureLogging(self):
     """Configures the logging env"""
-    logging.basicConfig(filename='/Users/cruizer/PythonProjects/kristofQgis/plugin.log',
+    logging.basicConfig(filename=self.iniConfig.get("hmv", "logdir") + 'plugin.log',
                         level=logging.DEBUG,
                         format='%(asctime)s %(levelname)s:%(message)s')
   def startPipeDiaCalc(self):
