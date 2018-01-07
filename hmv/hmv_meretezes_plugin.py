@@ -3,6 +3,7 @@ from PyQt4.QtCore import Qt, QObject, SIGNAL # pylint: disable=E0611
 from PyQt4.QtGui import QAction, QMessageBox # pylint: disable=E0611
 import qgis.core
 import logging
+import os
 import ConfigParser
 
 from hmv_widget import Ui_HmvWidget
@@ -26,7 +27,7 @@ class HmvPlugin(QObject):
     def __init__(self, iface):
         super(HmvPlugin, self).__init__()
         self.iniConfig = ConfigParser.ConfigParser()
-        self.iniConfig.read('/home/cruizer/.qgis2/python/plugins/hmv/hmv.ini')
+        self.iniConfig.readfp(open(os.path.expanduser('~/.qgis2/python/plugins/hmv/hmv.ini')))
         # Reference to the QGIS Qt environment
         self.iface = iface
         self.dock = None
