@@ -1,6 +1,6 @@
 #!/bin/bash
 currenttime=$(date '+%Y-%m-%d_%H-%M-%S')
-builddir=$(pwd)'/../../build_'$currenttime
+builddir=$(pwd)'/../build/build_'$currenttime
 plugindir=~/.qgis2/python/plugins/hmv/
 if [ ! -f hmv.ini ]; then
 	echo "No ini file, creating..."
