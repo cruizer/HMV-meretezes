@@ -36,7 +36,7 @@ A rendszer ezután létrehoz egy SpatiaLite adatbázist a megadott file névvel,
 
 Ha a létrehozáskor kiválasztotta a Hozzzáadás réteglistához? opciót, akkor az újonnan létrehozott réteg automatikusan hozzáadásra kerül a Rétegek Panel-hez (Layers Panel). Ellenkező esetben, ha szeretné hozzáadni az adott rétegeket a QGIS projektjéhez, kövesse a Már meglévő rétegek megnyitása részt.
 
-### Már meglévő rétekek megnyitása
+### Már meglévő rétegek megnyitása
 
 Ha a rétegek, amelyekkel dolgozni szeretne szerepelnek a Rétegek Panel-ben (Layers Panel), például, mert a réteg létrehozásakor kiválasztotta a Hozzáadás réteglistához? opciót, vagy egy korábban elmentett QGIS projektet nyitott meg, amelyben a rétegek amikkel dolgozni szeretne meg voltak nyitva, akkor nincs szükség erre a lépésre.
 
@@ -54,6 +54,19 @@ Megjegyzés: A QGIS-ben a rétegek létrehozása a legkülönbözőbb adatforrá
 - Kattintson jobb egérgombbal a projekthez hozzáadni kívánt rétegre és válassza a Réteg Hozzáadása (Add Layer) menüpontot.
 - A Koordináta Referencia Rendszer Kiválasztó-ban (Coordinate Reference System Selector) ne módosítsa az alapbeállítást (WGS84) és kattintson az OK gombra.
 - A réteg hozzáadásra kerül a Rétegek Panel-hez (Layers Panel).
+
+### Analízis munkarétegek kiválasztása
+
+Az méretezési számítások elvégzéséhez a HMV hálózatot két összefüggő vektor rétegre kell felrajzolni és az elemek paramétereit megadni. Ha az értékelendő HMV hálózat meghatározásához szükséges elem és csőhálózat réteg be van töltve a Rétegek panel-ba (Layers Panel):
+
+- A Beállítások fülön, nyomja meg a Réteg választás felirat melletti frissítés gombot.
+- A plugin betölti az Elemek QGIS réteg és Csőhálózat QGIS réteg legördülő menübe a megfelelő típusú rétegeket (pont és szakasz) a Rétegek panel-ból (Layers Panel).
+- Válassza ki a munkához használni kívánt rétegeket az Elemek QGIS réteg és Csőhálózat QGIS réteg legördülő menüben.
+- A plugin funkciói mostantól a kiválasztott rétegekre kerülnek alkalmazásra.
+
+### Használatban lévő munkarétegek formázása
+
+A hálózat ábrázolásának áttekinhetőbbé és informatívabbá tétele érdekében a kiválasztott munkarétegekeket egy gombnyomással formázhatjuk, ezzel a különböző objektumtípusok kiemelésre a kulcsadatok pedig megjelenítésre kerülnek a rajzon.
 
 ## Plugin komponensek
 
