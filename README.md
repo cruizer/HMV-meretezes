@@ -34,6 +34,27 @@ Ezt a következőképp tehetjük meg:
   
 A rendszer ezután létrehoz egy SpatiaLite adatbázist a megadott file névvel, ha még nem létezik. Ha már van ilyen nevű adatbázis file a réteg munkakönyvtárban, akkor megkérdezi, hogy az új réteget a már létező file-ba mentheti-e. Ezután a választott réteg típus létrehozásra kerül az adatbázisban, fontos, hogy ilyenkor a plugin által végzendő kalkulációkhoz szükséges feature attribútumok is létrehozásra kerülnek. Ebből kifolyólag nem javasolt a rétegek manuális létrehozása a QGIS eszközökkel (New SpatiaLite Layer, New Shapefile Layer), mert így elkerülhető az attribútumok manuális létrehozásával járó plusz munka és esetleges esetleges konfigurációs, vagy adatbeviteli hiba lehetősége.
 
+Ha a létrehozáskor kiválasztotta a Hozzzáadás réteglistához? opciót, akkor az újonnan létrehozott réteg automatikusan hozzáadásra kerül a Rétegek Panel-hez (Layers Panel). Ellenkező esetben, ha szeretné hozzáadni az adott rétegeket a QGIS projektjéhez, kövesse a Már meglévő rétegek megnyitása részt.
+
+### Már meglévő rétekek megnyitása
+
+Ha a rétegek, amelyekkel dolgozni szeretne szerepelnek a Rétegek Panel-ben (Layers Panel), például, mert a réteg létrehozásakor kiválasztotta a Hozzáadás réteglistához? opciót, vagy egy korábban elmentett QGIS projektet nyitott meg, amelyben a rétegek amikkel dolgozni szeretne meg voltak nyitva, akkor nincs szükség erre a lépésre.
+
+Ha egy adatbázisban már meglévő, de a QGIS projektben nem szereplő réteget meg szeretne nyitni (hozzáadni a Rétegek Panel-hez), akkor kövesse az alábbiakat.
+
+Megjegyzés: A QGIS-ben a rétegek létrehozása a legkülönbözőbb adatforrásokból lehetséges, azonban mivel a plugin SpatiaLite adatbázisban hozza létre a HMV analízishez megfelelően konfigurált régeteket, így a rétegek SpatiaLite adatbázisból való megnyitását tárgyaljuk.
+
+- A Böngésző Panel-ben (Browser Panel) kattintson jobb egérgombbal a SpatiaLite elemre.
+- Válassza az Új Kapcsolat (New Connection) menüpontot.
+- Keresse meg az adatbázis file-t.
+- Nyissa meg.
+- Az adatbázis most megjelenik a Böngésző Panel-ban (Browser Panel), a SpatiaLite elem alatti hierarchiában.
+- Nyissa ki az adatbázis elem alatti hierarchiát a Böngésző Panel-ban (Browser Panel).
+- Az adatbázisban tárolt rétegek megjelennek az adatbázis alatti hierarchiában.
+- Kattintson jobb egérgombbal a projekthez hozzáadni kívánt rétegre és válassza a Réteg Hozzáadása (Add Layer) menüpontot.
+- A Koordináta Referencia Rendszer Kiválasztó-ban (Coordinate Reference System Selector) ne módosítsa az alapbeállítást (WGS84) és kattintson az OK gombra.
+- A réteg hozzáadásra kerül a Rétegek Panel-hez (Layers Panel).
+
 ## Plugin komponensek
 
 A plugin telepítéséhez a következő file-okat kell a QGIS plugin könyvtárába másolni, pl. az én esetemben a plugin file-ok itt vannak: ``~/.qgis2/python/plugins/hmv/``.
