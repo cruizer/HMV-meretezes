@@ -7,9 +7,9 @@ if [ ! -f "$projdir/hmv_meretezes_plugin.py" ];then
 fi
 builddir="$projdir"'/../build/build_'$currenttime
 plugindir=~/.qgis2/python/plugins/hmv/
-if [ ! -f hmv.ini ]; then
+if [ ! -f "${projdir}/hmv.ini" ]; then
 	echo "No ini file, creating..."
-	echo '[hmv]' > hmv.ini
+	echo '[hmv]' > "${projdir}"/hmv.ini
 	while [ ! -d "$logpath" ];do
 		[ ! -z ${logpath+x} ] && echo "Directory $logpath doesn't exist!"
 		echo -n 'Plugin logs should be put in directory (absolute path): '
@@ -25,12 +25,12 @@ if [ ! -f hmv.ini ]; then
 	echo "workdir=$workdir" >> hmv.ini
 fi
 mkdir $builddir
-cp *.py $builddir
-cp metadata.txt $builddir
-cp *.svg $builddir
-cp *.ini $builddir
+cp -v "${projdir}"/*.py $builddir
+cp -v "${projdir}"/metadata.txt $builddir
+cp -v "${projdir}"/*.svg $builddir
+cp -v "${projdir}"/*.ini $builddir
 if [ "$#" -eq 1 ] && [ "$1" = "-i" ]; then
-	[ ! -d "$plugindir" ] && mkdir $plugindir
-	rm -fr ~/.qgis2/python/plugins/hmv/*
-	cp -R "$builddir/"* ~/.qgis2/python/plugins/hmv/
+	[ ! -d "$plugindir" ] && mkdir "$plugindir"
+	rm -frv "${plugindir}/"*
+	cp -v -R "${builddir}/"* "$plugindir"
 fi
