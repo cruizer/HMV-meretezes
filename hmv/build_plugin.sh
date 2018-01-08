@@ -21,8 +21,8 @@ if [ ! -f "${projdir}/hmv.ini" ]; then
 		read workdir
 	done
 
-	echo "logdir=$logpath" >> hmv.ini
-	echo "workdir=$workdir" >> hmv.ini
+	echo "logdir=$logpath" >> "${projdir}"/hmv.ini
+	echo "workdir=$workdir" >> "${projdir}"/hmv.ini
 fi
 mkdir $builddir
 cp -v "${projdir}"/*.py $builddir
