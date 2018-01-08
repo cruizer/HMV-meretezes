@@ -6,6 +6,11 @@ Használati melegvíz csőrendszer méretező plugin QGIS-hez.
 
 ## Használat
 
+### Munkarétegek létrehozása
+
+A csőhálózat elemzéséhez kétféle vektor réteget kell létrehoznunk a QGIS-ben:
+
+
 ## Plugin komponensek
 
 A plugin telepítéséhez a következő file-okat kell a QGIS plugin könyvtárába másolni, pl. az én esetemben a plugin file-ok itt vannak: ``~/.qgis2/python/plugins/hmv/``.
