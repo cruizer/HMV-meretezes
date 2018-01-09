@@ -77,6 +77,10 @@ A Beállítások fül alatt lehetőség van a számításokhoz használt rendsze
 - Δϑ: tervezett hőmérséklet csökkenés a tárolótól a csapig, mértékegysége K
 - Csősebesség: közeg tervezett csősebessége, mértékegysége m/s
 
+### Visszatérő ág cső méreteinek megadása
+
+Az plugin analízise során a visszatérő ág csőméretei is kiszámitásra kerülnek. A Cső méretek fül alatt beállíthatja azokat a cső méreteket, amelyekből a program kiválatsztja a megadott alapján a legoptimálisabbat.
+
 ## Plugin komponensek
 
 A plugin telepítéséhez a következő file-okat kell a QGIS plugin könyvtárába másolni, pl. az én esetemben a plugin file-ok itt vannak: ``~/.qgis2/python/plugins/hmv/``.
