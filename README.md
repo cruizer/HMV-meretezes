@@ -81,6 +81,25 @@ A Beállítások fül alatt lehetőség van a számításokhoz használt rendsze
 
 Az plugin analízise során a visszatérő ág csőméretei is kiszámitásra kerülnek. A Cső méretek fül alatt beállíthatja azokat a cső méreteket, amelyekből a program kiválasztja majd a legoptimálisabbat.
 
+### Hálózat ellenőrzés analízis előtt
+
+A analízis elvégzése előtt fontos, hogy a hálózat integritása megfelelő legyen. Ha a hálózat elemei között illesztési hibák vannak (két elem nem találkozik), akkor az analízis nem lesz elvégezhető, mivel az elemek közötti kapcsolatok nem értelmezhetőek.
+
+A hálózatot ellenörző funkció ebben nyújt segítséget, felderíti az integritási problémákat, így ezeket könnyebben megtalálhatja és javíthatja. A funkció haszálatához kattintson a Hálózat ell. fülre, majd nyomja meg a Hálózat ellenőrzés gombot. Az a következő állapot adatokat jelenítjük meg:
+
+- Státusz
+  - Nem ellenőrzött (a hálózatot még nem ellenőrizte eddig)
+  - Hibás! (a hálózatban hibát találtunk)
+  - OK (a hálózat rendben van)
+- Összes elem száma: Az ellenőrzés során talált hálózati elemek száma.
+- Hibás elemek száma: Az ellenőrzés során talált összes hibás elem száma.
+- Hibás elemek (csatlakozás nem megfelelő): A talált hibás elemek listája.
+  - QGIS réteg: Melyik rétegen található az adott elem.
+  - id: Az elem azonosítója.
+  - Típus: Az elem típusa.
+  
+  A hibás elemek listájában található elemeket javítani kell, majd az ellenőrzést meg kell ismételni.
+  
 ## Plugin komponensek
 
 A plugin telepítéséhez a következő file-okat kell a QGIS plugin könyvtárába másolni, pl. az én esetemben a plugin file-ok itt vannak: ``~/.qgis2/python/plugins/hmv/``.
