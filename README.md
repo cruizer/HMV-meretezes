@@ -98,7 +98,19 @@ A hálózatot ellenörző funkció ebben nyújt segítséget, felderíti az inte
   - id: Az elem azonosítója.
   - Típus: Az elem típusa.
   
-  A hibás elemek listájában található elemeket javítani kell, majd az ellenőrzést meg kell ismételni.
+A hibás elemek listájában található elemeket javítani kell, majd az ellenőrzést meg kell ismételni.
+  
+### Analízis
+
+Az hálózat megtervezése és ellenőrzése után elvégezhető az analízis. Ezt az Analízis fül alatt lehet megtenni. Ha hálózat ellenőrzést még nem végezte el, vagy az sikertelen volt, egy üzenet jelenik meg, hogy ellenőrzést az analízis megkezdése előtt el kell végezni és annak sikeresnek kell lennie, vagyis a hálózat nem tartalmazhat hibákat.
+
+Ha az ellenőrzést már sikeresen elvégezte, akkor az Analízis gomb megnyomásával futtathatja le az analízist, ami elvégzi a számításokat.
+
+#### Eredmények megjelenítése
+
+#### Körönkénti nyomás és fojtás eredmények
+
+#### Áramlás eredmények
   
 ## Plugin komponensek
 
