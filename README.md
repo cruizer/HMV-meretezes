@@ -68,6 +68,15 @@ Az méretezési számítások elvégzéséhez a HMV hálózatot két összefügg
 
 A hálózat ábrázolásának áttekinhetőbbé és informatívabbá tétele érdekében a kiválasztott munkarétegekeket egy gombnyomással formázhatjuk, ezzel a különböző objektumtípusok kiemelésre a kulcsadatok pedig megjelenítésre kerülnek a rajzon.
 
+### Kiindulási adatok megadása
+
+A Beállítások fül alatt lehetőség van a számításokhoz használt rendszerszintű kiindulási adatok megadására. Ezek:
+
+- Sűrűség: közeg (víz) sűrűsége, mértékegysége kg/m³
+- Fajhő: közeg (víz) fajhője, mértékegysége J/kgK
+- Δϑ: tervezett hőmérséklet csökkenés a tárolótól a csapig, mértékegysége K
+- Csősebesség: közeg tervezett csősebessége, mértékegysége m/s
+
 ## Plugin komponensek
 
 A plugin telepítéséhez a következő file-okat kell a QGIS plugin könyvtárába másolni, pl. az én esetemben a plugin file-ok itt vannak: ``~/.qgis2/python/plugins/hmv/``.
