@@ -79,7 +79,7 @@ A Beállítások fül alatt lehetőség van a számításokhoz használt rendsze
 
 ### Visszatérő ág cső méreteinek megadása
 
-Az plugin analízise során a visszatérő ág csőméretei is kiszámitásra kerülnek. A Cső méretek fül alatt beállíthatja azokat a cső méreteket, amelyekből a program kiválatsztja a megadott alapján a legoptimálisabbat.
+Az plugin analízise során a visszatérő ág csőméretei is kiszámitásra kerülnek. A Cső méretek fül alatt beállíthatja azokat a cső méreteket, amelyekből a program kiválasztja majd a legoptimálisabbat.
 
 ## Plugin komponensek
 
