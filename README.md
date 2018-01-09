@@ -1,4 +1,4 @@
-# HMV-meretezes
+# HMV Méretezés
 
 Használati melegvíz csőrendszer méretező plugin QGIS-hez.
 
