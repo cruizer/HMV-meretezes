@@ -111,6 +111,20 @@ Ha az ellenőrzést már sikeresen elvégezte, akkor az Analízis gomb megnyomá
 #### Körönkénti nyomás és fojtás eredmények
 
 #### Áramlás eredmények
+
+### Számítások
+
+#### Szakaszokra végzett számítások
+
+Minden *m* szakaszra számítandó az adott szakasz hővesztesége a következő egyenletekkel:
+
+##### Hőátbocsátási tényező [W/mK]
+
+kᵥ = π / ( ( 1 / ( 2 · λₘ ) ) · ln( Dₘ - dₘ ) + ( 1 / ( αₖₘ · Dₘ / 1000 ) ) )
+
+##### Hőleadás [W/m]
+
+q̇ₘ = kₘ · ( Tₕₘᵥ - Tₕ )
   
 ## Plugin komponensek
 
