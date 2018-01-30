@@ -162,6 +162,10 @@ Ezt a következőképp számítjuk:
 és
 - A kiválasztott szakasz hőveszteségének
 összege.
+
+##### Szakaszok térfogatáramának meghatározása
+
+A hálózaton a HMV tároló berendezéstől indulva az előremenő hálózaton számítjuk. A csomópontba bejövő összes csőszakasz térfogatáramát szorozzuk a számolt vezeték leágazó hőveszteségével, osztva a csomópontban hátralévő összes hőveszteséggel.
   
 ## Plugin komponensek
 
