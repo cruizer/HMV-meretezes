@@ -174,6 +174,19 @@ A eloremeno halozat szakaszoknak megfelelo visszatero oldali csoszakaszok atmero
 wₘ = 4 · (V̇ₘ / 3,6 · 10⁶) / ((dₘ / 1000)² · π)
 
 Ezt a szamitast sorban elvegezzuk a rendelkezesre allo csomeretekkel, egeszen addig, amig a csosebesseg 0,2 m/s es 1 m/s koze nem esik, ha ez megtortenik, akkor az adott csoatmero a megfelelo.
+
+#### Csosurlodasi tenyezo meghatarozasa
+
+A csosurlodasi tenyezo szamitasanak modja fugg az aramlas termeszetetol, amit a Reynolds szam hataroz meg. Tehat eloszor ezt szamitjuk, ennek modja:
+
+Rₑ = wₘ · (dₘ / 1000) / vₘ
+
+Ahol vₘ a kinematikai viszkozitas, allando erteke 5 · 10⁻⁷ esetunkben.
+
+Ezutan:
+
+- A csosurlodasi tenyezo szamitasa Rₑ <= 2300 eseten: λ = 64 / Rₑ
+- A csosurlodasi tenyezo szamitase Rₑ > 2300 eseten: λ = 1 / (-2 · lg(2,51 / (Rₑ √λ)))²
   
 ## Plugin komponensek
 
