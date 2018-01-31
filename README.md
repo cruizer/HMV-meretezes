@@ -166,6 +166,14 @@ Ezt a következőképp számítjuk:
 ##### Szakaszok térfogatáramának meghatározása
 
 A hálózaton a HMV tároló berendezéstől indulva az előremenő hálózaton számítjuk. A csomópontba bejövő összes csőszakasz térfogatáramát szorozzuk a számolt vezeték leágazó hőveszteségével, osztva a csomópontban hátralévő összes hőveszteséggel.
+
+#### Visszatero oldal csoatmerok meghatarozasa
+
+A eloremeno halozat szakaszoknak megfelelo visszatero oldali csoszakaszok atmeroit az eloremeno oldal terforgataramok, es a rendelkezesre allo csomeretek (konfiguracioban modosithato) szerint szamoljuk, a kovetkezo keplet szerint:
+
+wₘ = 4 · (V̇ₘ / 3,6 · 10⁶) / ((dₘ / 1000)² · π)
+
+Ezt a szamitast sorban elvegezzuk a rendelkezesre allo csomeretekkel, egeszen addig, amig a csosebesseg 0,2 m/s es 1 m/s koze nem esik, ha ez megtortenik, akkor az adott csoatmero a megfelelo.
   
 ## Plugin komponensek
 
