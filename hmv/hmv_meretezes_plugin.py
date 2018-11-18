@@ -27,7 +27,8 @@ class HmvPlugin(QObject):
     def __init__(self, iface):
         super(HmvPlugin, self).__init__()
         self.iniConfig = ConfigParser.ConfigParser()
-        self.iniConfig.readfp(open(os.path.expanduser('~/.qgis2/python/plugins/hmv/hmv.ini')))
+        self.iniConfig.readfp(open(os.path.join(qgis.core.QgsApplication.qgisSettingsDirPath(),
+                                                'python/plugins/hmv/hmv.ini')))
         # Reference to the QGIS Qt environment
         self.iface = iface
         self.dock = None

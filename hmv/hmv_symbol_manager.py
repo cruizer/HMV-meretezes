@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import qgis
+import os.path
 from PyQt4 import QtGui
+
+plugin_dir = os.path.join(qgis.core.QgsApplication.qgisSettingsDirPath(), 'python/plugins/hmv')
 
 def createPipeSymbols(baseLayer):
     # Setting up simple line symbol layer
@@ -37,7 +40,7 @@ def createPipeSymbols(baseLayer):
 
 def createNodeSymbols(baseLayer):
     # Setting up marker for pump
-    pump_marker_layer = qgis.core.QgsSvgMarkerSymbolLayerV2('./Pump.svg')
+    pump_marker_layer = qgis.core.QgsSvgMarkerSymbolLayerV2(os.path.join(plugin_dir, 'Pump.svg'))
     pump_marker_layer.setSize(20)
     pump_marker_layer.setOutlineWidth(1)
     pump_marker_layer.setScaleMethod(qgis.core.QgsSymbolV2.ScaleArea)
@@ -81,7 +84,7 @@ def setupNodeLayer(layerName):
     # Fetch the layer from the project
     nodeLayer = qgis.core.QgsMapLayerRegistry.instance().mapLayersByName(layerName)[0]
     # Set the UI file used to edit layer attributes
-    nodeLayer.setEditForm('./elemek_form.ui')
+    nodeLayer.setEditForm(os.path.join(plugin_dir, 'elemek_form.ui'))
     # Setup the renderer with symbols added
     nodeLayer.setRendererV2(createNodeSymbols(nodeLayer))
     # Node labels
@@ -93,7 +96,7 @@ def setupPipeLayer(layerName):
     # Fetch the layer from the project
     pipeLayer = qgis.core.QgsMapLayerRegistry.instance().mapLayersByName(layerName)[0]
     # Set the UI file used to edit layer attributes
-    pipeLayer.setEditForm('./szakaszok_form.ui')
+    pipeLayer.setEditForm(os.path.join(plugin_dir, 'szakaszok_form.ui'))
     # Setup the renderer with symbols added
     pipeLayer.setRendererV2(createPipeSymbols(pipeLayer))
     # Pipe labels
