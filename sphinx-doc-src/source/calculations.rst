@@ -9,6 +9,10 @@ Minden *m* szakaszra számítandó az adott szakasz hővesztesége a következő
 Hőátbocsátási tényező [W/mK]
 ============================
 
+.. math::
+
+   k_{m} = \frac{\pi}{\frac{1}{2 \cdot \lambda_{m}} \cdot \ln\frac{D_{m}}{d_{m}} + \frac{1}{\alpha_{k;m} \cdot \frac{d_{m}}{1000}}}
+
 kᵥ = π / ( ( 1 / ( 2 · λₘ ) ) · ln( Dₘ - dₘ ) + ( 1 / ( αₖₘ · Dₘ / 1000 ) ) )
 
 Hőleadás [W/m]
