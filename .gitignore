@@ -1,3 +1,4 @@
 *.swp
 hmv.ini
 build/
+\#*\#
