@@ -89,6 +89,8 @@ def setupNodeLayer(layerName):
     nodeLayer.setRendererV2(createNodeSymbols(nodeLayer))
     # Node labels
     setNodeLabeling(nodeLayer)
+    # Setup attribute config UI multichoice options
+    nodeLayer.editFormConfig().setWidgetConfig(nodeLayer.fieldNameIndex('tipus'), {u'Csapol\xf3': u'Csapolo', u'Csom\xf3pont': u'Csomopont', u'Melegv\xedz Termel\u0151 Berendez\xe9s': u'MTB'})
 
 
 def setupPipeLayer(layerName):
