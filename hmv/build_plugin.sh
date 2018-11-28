@@ -39,6 +39,7 @@ cp -v "${projdir}"/*.py $builddir
 cp -v "${projdir}"/metadata.txt $builddir
 cp -v "${projdir}"/*.svg $builddir
 cp -v "${projdir}"/*.ini $builddir
+cp -v "${projdir}"/*.ui $builddir
 
 if [ "$#" -eq 1 ] && [ "$1" = "-i" ]; then
 	[ ! -d "$plugindir" ] && mkdir -p "$plugindir"
