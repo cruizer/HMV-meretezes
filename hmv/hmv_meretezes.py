@@ -38,6 +38,7 @@ class NetworkEnvironment(object):
         self.specificHeat = 4200.0 # J/kgK
         self.deltaTheta = 2.0 # K
         self.pipeSpeedLimit = 1 # m/s
+        self.pipeMinimumSpeed = 0.2 # m/s
         # Total heatloss of flow network
         self.totalNetworkHeatloss = None
         self.pumpFlow = None
@@ -355,7 +356,7 @@ class AnalyzePipeDiameter(object):
                 # We need to divide the pipe flow 3.6e6 because it is in dm3/h
                 flowSpeed = 4 * (pipeFlow / 3.6e6) / (pow((diameter / 1000.0), 2) * math.pi)
                 logging.debug('Flow speed is %sm/s.', flowSpeed)
-                if flowSpeed < self.env.pipeSpeedLimit:
+                if flowSpeed < self.env.pipeSpeedLimit and flowSpeed > self.env.pipeMinimumSpeed:
                     logging.debug('Flow speed is between 0.2-1.0 m/s we use this diameter.')
                     pipe.setAttribute('vissza_atm', diameter)
                     pipe.setAttribute('aram_seb', flowSpeed)
