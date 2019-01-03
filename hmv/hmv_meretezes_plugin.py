@@ -147,8 +147,11 @@ class HmvPlugin(QObject):
         # Populating layer choice combo
         self.dock.nodeLayerSelect_combo.clear()
         self.dock.nodeLayerSelect_combo.addItems(self.netEnv.collectLayers(qgis.core.QGis.WKBPoint))
+        self.netEnv.setNodeLayerName(self.dock.nodeLayerSelect_combo.currentText())
         self.dock.pipeLayerSelect_combo.clear()
         self.dock.pipeLayerSelect_combo.addItems(self.netEnv.collectLayers(qgis.core.QGis.WKBLineString))
+        self.netEnv.setPipeLayerName(self.dock.pipeLayerSelect_combo.currentText())
+        
     def formatLayerChoice(self):
         hmv_symbol_manager.setupNodeLayer(self.dock.nodeLayerSelect_combo.currentText())
         hmv_symbol_manager.setupPipeLayer(self.dock.pipeLayerSelect_combo.currentText())
