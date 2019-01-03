@@ -6,5 +6,4 @@ if [ "$#" -ne 1 ] || [ ! -f "$1" ]; then
 fi
 uifile=$1
 pyfile=$(echo $1 | sed -E 's/\.ui/.py/')
-command -v pyuic4 >/dev/null 2>&1 || { echo >&2 "Unable to find pyuic4.  Aborting."; exit 1; }
-pyuic4 $uifile | sed -E 's/^(class[^(]+)\(object\)\:$/\1\(QtGui.QDockWidget\):/' > $pyfile
+python /usr/lib/python2.7/dist-packages/qgis/PyQt/uic/pyuic.py $uifile | sed -E 's/^(class[^(]+)\(object\)\:$/\1\(QtGui.QDockWidget\):/' > $pyfile
