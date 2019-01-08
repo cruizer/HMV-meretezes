@@ -22,11 +22,14 @@ def createLayer(layerName, fileName, workingDir, layerType):
 
     else:
         datasource = driver.CreateDataSource(layerFilePath, options=['SPATIALITE=YES'])
+    # Prepare WGS84 SRS for the new layer
+    wgs84 = ogr.osr.SpatialReference()
+    wgs84.ImportFromEPSG(4326)
     # Create the type of layer needed
     if layerType == 'szakaszok':
-        layer = datasource.CreateLayer(layerName.encode('utf-8'), geom_type=ogr.wkbLineString)
+        layer = datasource.CreateLayer(layerName.encode('utf-8'), srs=wgs84, geom_type=ogr.wkbLineString)
     elif layerType == 'elemek':
-        layer = datasource.CreateLayer(layerName.encode('utf-8'), geom_type=ogr.wkbPoint)
+        layer = datasource.CreateLayer(layerName.encode('utf-8'), srs=wgs84, geom_type=ogr.wkbPoint)
     else:
         return None
 
