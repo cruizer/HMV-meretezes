@@ -5,6 +5,11 @@ from PyQt4 import QtGui
 
 plugin_dir = os.path.join(qgis.core.QgsApplication.qgisSettingsDirPath(), 'python/plugins/hmv')
 
+def setSnapping(layer):
+    proj = qgis.core.QgsProject.instance()
+    proj.setSnapSettingsForLayer(layer.id(), True, qgis.core.QgsSnapper.SnapToVertexAndSegment, qgis.core.QgsTolerance.Pixels, 20, False)
+    proj.writeEntry('Digitizing', 'SnappingMode', 'advanced')
+
 def createPipeSymbols(baseLayer):
     # Setting up simple line symbol layer
     simple_line_layer = qgis.core.QgsSimpleLineSymbolLayerV2()
@@ -91,6 +96,7 @@ def setupNodeLayer(layerName):
     setNodeLabeling(nodeLayer)
     # Setup attribute config UI multichoice options
     nodeLayer.editFormConfig().setWidgetConfig(nodeLayer.fieldNameIndex('tipus'), {u'Csapol\xf3': u'Csapolo', u'Csom\xf3pont': u'Csomopont', u'Melegv\xedz Termel\u0151 Berendez\xe9s': u'MTB'})
+    setSnapping(nodeLayer)
 
 
 def setupPipeLayer(layerName):
@@ -103,6 +109,7 @@ def setupPipeLayer(layerName):
     pipeLayer.setRendererV2(createPipeSymbols(pipeLayer))
     # Pipe labels
     setPipeLabeling(pipeLayer)
+    setSnapping(pipeLayer)
 
 
 def setNodeLabeling(layer):
