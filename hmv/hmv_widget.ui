@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>HMV Meretezes</string>
+   <string>HMV Méretezés</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <property name="sizePolicy">
@@ -121,8 +121,6 @@
        <zorder>validateStart_btn</zorder>
        <zorder></zorder>
        <zorder></zorder>
-       <zorder></zorder>
-       <zorder>numberOfErrElements_label</zorder>
        <zorder></zorder>
        <zorder>errElementsList_label</zorder>
        <zorder>errElements_table</zorder>

@@ -89,7 +89,6 @@ class Ui_HmvWidget(QtGui.QDockWidget):
         self.errElements_table.setObjectName(_fromUtf8("errElements_table"))
         self.verticalLayout.addWidget(self.errElements_table)
         self.validateStart_btn.raise_()
-        self.numberOfErrElements_label.raise_()
         self.errElementsList_label.raise_()
         self.errElements_table.raise_()
         self.tabs_Wdg.addTab(self.networkVal_tab, _fromUtf8(""))
@@ -401,7 +400,7 @@ class Ui_HmvWidget(QtGui.QDockWidget):
         QtCore.QMetaObject.connectSlotsByName(HmvWidget)
 
     def retranslateUi(self, HmvWidget):
-        HmvWidget.setWindowTitle(_translate("HmvWidget", "HMV Meretezes", None))
+        HmvWidget.setWindowTitle(_translate("HmvWidget", "HMV Méretezés", None))
         self.validateStart_btn.setText(_translate("HmvWidget", "Hálózat ellenőrzés", None))
         self.checkStatus_label.setText(_translate("HmvWidget", "Státusz:", None))
         self.checkStatusValue_label.setText(_translate("HmvWidget", "Nem Ellenőrzött", None))

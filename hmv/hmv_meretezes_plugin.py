@@ -47,18 +47,18 @@ class HmvPlugin(QObject):
         self.elementErrTableModel = None
     def initGui(self):
         # create Qt action that will open the plugin
-        self.stPluginAction = QAction("HMV Meretezes", self.iface.mainWindow()) # pylint: disable=E0602
+        self.stPluginAction = QAction(u"HMV Méretezés", self.iface.mainWindow()) # pylint: disable=E0602
         self.stPluginAction.setObjectName("pipeAnalyticsStart")
         self.stPluginAction.setWhatsThis("Option to start pipe network analysis")
-        self.stPluginAction.setStatusTip("Meretezo plugin inditasa")
+        self.stPluginAction.setStatusTip(u"Méretező plugin indítása")
         # We run the widget when the action is triggered
         QObject.connect(self.stPluginAction, SIGNAL("triggered()"), self.startPlugin) # pylint: disable=E1101
 
         # add toolbar button and menu item
         # self.iface.addToolBarIcon(self.action)
-        self.iface.addPluginToMenu("HMV Meretezes", self.stPluginAction)
+        self.iface.addPluginToMenu(u'HMV Méretezés', self.stPluginAction)
     def unload(self):
-        self.iface.removePluginMenu("HMV Meretezes", self.stPluginAction)
+        self.iface.removePluginMenu(u'HMV Méretezés', self.stPluginAction)
         QObject.disconnect(self.stPluginAction, SIGNAL("triggered()"), self.startPlugin) # pylint: disable=E1101
     def startPlugin(self):
         # We set up the network environment
