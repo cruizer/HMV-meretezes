@@ -101,8 +101,7 @@ class HmvPlugin(QObject):
                         self.netEnv.setPipeLayerName)
         QObject.connect(self.dock.formatLayers_btn, SIGNAL("clicked()"), self.formatLayerChoice)
         QObject.connect(self.dock.createNewLayer_btn, SIGNAL('clicked()'), self.createNewLayer)
-        QObject.connect(self.dock.autoDbFileName_checkbox, SIGNAL('stateChanged(int)'), self.dbLayerFileToggle)
-        QObject.connect(self.dock.newLayerName_txtField, SIGNAL('editingFinished()'), self.autoSetDbLayerFileField)
+        
     def startAllCalc(self):
         self.startHeatlossCalc()
         self.startFlowCalc()
@@ -228,26 +227,6 @@ class HmvPlugin(QObject):
     def disableAnalysis(self):
         self.dock.theAnalysis_btn.setEnabled(False)
         self.dock.verifyNotification_lbl.setVisible(True)
-
-
-    def autoSetDbLayerFileField(self):
-        if self.dock.autoDbFileName_checkbox.isChecked() == True:
-            self.dock.newLayerDbFile_txtField.setText('{}.sqlite'.format(
-                                                            self.dock.newLayerName_txtField.text()
-                                                      )
-            )
-
-
-    def dbLayerFileToggle(self, status):
-        """Disable layer file name field if determined by layer name
-        enable if not.
-        """
-        if status == Qt.Checked:
-            self.autoSetDbLayerFileField()
-            self.dock.newLayerDbFile_txtField.setReadOnly(True)
-        elif status == Qt.Unchecked:
-            self.dock.newLayerDbFile_txtField.setReadOnly(False)
-
 
     def createNewLayer(self):
         """Create a new datasource and layer, add to registry if needed"""

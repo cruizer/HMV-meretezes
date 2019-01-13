@@ -616,13 +616,6 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="label_23">
-                  <property name="text">
-                   <string>File név réteg név szerint?</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
                  <widget class="QLabel" name="label_21">
                   <property name="text">
                    <string>Réteg típus</string>
@@ -645,16 +638,6 @@
                 </item>
                 <item>
                  <widget class="QLineEdit" name="newLayerDbFile_txtField"/>
-                </item>
-                <item>
-                 <widget class="QCheckBox" name="autoDbFileName_checkbox">
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
                 </item>
                 <item>
                  <widget class="QComboBox" name="newLayerType_combo">
