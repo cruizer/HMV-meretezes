@@ -128,7 +128,7 @@ def setPipeLabeling(layer):
     layer.setCustomProperty('labeling', 'pal')
     layer.setCustomProperty('labeling/enabled', True)
     layer.setCustomProperty('labeling/fieldName', '\'(\' || $id || \')\' || \'\n\' |'
-                                                  '|\'Ø \'||atmero_cso || \'mm\'|| \'/\' '
+                                                  u'|\'\u2300 \'||atmero_cso || \'mm\'|| \'/\' '
                                                   '|| vissza_atm  || \'mm\' || \'\n\' || '
                                                   '\'Vm = \' || terfaram || \' dm3/h\'')
     layer.setCustomProperty('labeling/addDirectionSymbol', True)
