@@ -155,6 +155,7 @@ class HmvPlugin(QObject):
     def formatLayerChoice(self):
         hmv_symbol_manager.setupNodeLayer(self.dock.nodeLayerSelect_combo.currentText())
         hmv_symbol_manager.setupPipeLayer(self.dock.pipeLayerSelect_combo.currentText())
+        self.iface.mapCanvas().refreshAllLayers()
     def saveSettings(self):
         self.netEnv.density = float(self.dock.density_txtField.text())
         self.netEnv.specificHeat = float(self.dock.specificHeat_txtField.text())
