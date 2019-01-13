@@ -120,7 +120,7 @@ def setNodeLabeling(layer):
                                                   '|| \'\n\' || tipus || \' (\' || $id || \')\''
                                                   'ELSE tipus || \' (\' || $id || \')\' END')
     layer.setCustomProperty('labeling/fontSize', 13)
-    layer.setCustomProperty('labeling/fontFamily', 'Helvetica')
+    layer.setCustomProperty('labeling/fontFamily', 'Cantarell')
     layer.setCustomProperty('labeling/isExpression', True)
 
 def setPipeLabeling(layer):
@@ -133,5 +133,5 @@ def setPipeLabeling(layer):
                                                   '\'Vm = \' || terfaram || \' dm3/h\'')
     layer.setCustomProperty('labeling/addDirectionSymbol', True)
     layer.setCustomProperty('labeling/fontSize', 13)
-    layer.setCustomProperty('labeling/fontFamily', 'Helvetica')
+    layer.setCustomProperty('labeling/fontFamily', 'Cantarell')
     layer.setCustomProperty('labeling/isExpression', True)
