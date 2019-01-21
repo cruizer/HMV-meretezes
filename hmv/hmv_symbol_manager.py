@@ -44,11 +44,6 @@ def createPipeSymbols(baseLayer):
 
 
 def createNodeSymbols(baseLayer):
-    # Setting up marker for pump
-    pump_marker_layer = qgis.core.QgsSvgMarkerSymbolLayerV2(os.path.join(plugin_dir, 'Pump.svg'))
-    pump_marker_layer.setSize(20)
-    pump_marker_layer.setOutlineWidth(1)
-    pump_marker_layer.setScaleMethod(qgis.core.QgsSymbolV2.ScaleArea)
     # Setting up simple symbol layer
     simple_marker_layer = qgis.core.QgsSimpleMarkerSymbolLayerV2()
     simple_marker_layer.setScaleMethod(qgis.core.QgsSymbolV2.ScaleArea)
@@ -63,8 +58,7 @@ def createNodeSymbols(baseLayer):
     bad_marker.setSize(4)
     bad_marker.setColor(QtGui.QColor(237, 0, 8))
     # Rules data
-    node_rules = ((u'Szivattyú', '"tipus" = \'Szivattyu\'', pump_marker_layer),
-                  (u'Hálózat nem ellenőrzött', '"assoc_err" = 0', not_verified_marker),
+    node_rules = ((u'Hálózat nem ellenőrzött', '"assoc_err" = 0', not_verified_marker),
                   (u'Hálózat OK', '"assoc_err" = 2', ok_marker),
                   (u'Hálózat hiba', '"assoc_err" = 1', bad_marker)
     )
