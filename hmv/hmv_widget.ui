@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>HMV Méretezés</string>
+   <string>Domestic Hot Water System Sizing</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <property name="sizePolicy">
@@ -39,95 +39,349 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
-      <widget class="QWidget" name="networkVal_tab">
+      <widget class="QWidget" name="settings_tab">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <attribute name="title">
-        <string>Hálózat ell.</string>
+        <string>Settings</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout">
+       <layout class="QVBoxLayout" name="verticalLayout_13">
         <item>
-         <widget class="QPushButton" name="validateStart_btn">
-          <property name="text">
-           <string>Hálózat ellenőrzés</string>
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QLabel" name="checkStatus_label">
-            <property name="text">
-             <string>Státusz:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="checkStatusValue_label">
-            <property name="text">
-             <string>Nem Ellenőrzött</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <item>
-           <widget class="QLabel" name="numberOfElements_label">
-            <property name="text">
-             <string>Összes elem száma:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="numberOfElementsValue_label">
-            <property name="text">
-             <string>0</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <item>
-           <widget class="QLabel" name="numberOfErrElements_label">
-            <property name="text">
-             <string>Hibás elemek száma:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="numberOfErrElementsValue_label">
-            <property name="text">
-             <string>0</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QLabel" name="errElementsList_label">
-          <property name="text">
-           <string>Hibás elemek (csatlakozás nem megfelelő)</string>
+          <property name="widgetResizable">
+           <bool>true</bool>
           </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>402</width>
+             <height>754</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_14">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_11">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_4">
+                <item>
+                 <widget class="QPushButton" name="resetSettings_btn">
+                  <property name="text">
+                   <string>Reset</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="saveSettings_btn">
+                  <property name="text">
+                   <string>Save</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_17">
+              <property name="text">
+               <string>Layers Selection</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="refreshLayers_btn">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">border-image : url(:/refresh/refresh.svg) 0 0 0 0 stretch stretch;</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_6">
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_8">
+                <item>
+                 <widget class="QLabel" name="label_15">
+                  <property name="text">
+                   <string>Node Layer</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_16">
+                  <property name="text">
+                   <string>Pipe Layer</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_9">
+                <item>
+                 <widget class="QComboBox" name="nodeLayerSelect_combo"/>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="pipeLayerSelect_combo"/>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_10">
+                <item>
+                 <widget class="QPushButton" name="formatLayers_btn">
+                  <property name="text">
+                   <string>Format</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="Line" name="line_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_14">
+              <property name="text">
+               <string>Base Data</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_4">
+                <item>
+                 <widget class="QLabel" name="label_8">
+                  <property name="text">
+                   <string>Density</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_6">
+                  <property name="text">
+                   <string>Specific Heat</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_4">
+                  <property name="text">
+                   <string>Δϑ</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_11">
+                  <property name="text">
+                   <string>Pipe Velocity</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_6">
+                <item>
+                 <widget class="QLineEdit" name="density_txtField"/>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="specificHeat_txtField"/>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="deltaTheta_txtField"/>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="pipeSpeedLimit_txtField"/>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_7">
+                <item>
+                 <widget class="QLabel" name="label_9">
+                  <property name="text">
+                   <string>kg/m3</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_7">
+                  <property name="text">
+                   <string>J/kgK</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_5">
+                  <property name="text">
+                   <string>K</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_13">
+                  <property name="text">
+                   <string>m/s</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="Line" name="line_3">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_18">
+              <property name="text">
+               <string>New DHW System Layer</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_11">
+                <item>
+                 <widget class="QLabel" name="label_19">
+                  <property name="text">
+                   <string>Layer Name</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_20">
+                  <property name="text">
+                   <string>Database File Name</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_21">
+                  <property name="text">
+                   <string>Layer Type</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_22">
+                  <property name="text">
+                   <string>Add to Layers Panel?</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_12">
+                <item>
+                 <widget class="QLineEdit" name="newLayerName_txtField"/>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="newLayerDbFile_txtField"/>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="newLayerType_combo">
+                  <item>
+                   <property name="text">
+                    <string>szakaszok</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>elemek</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="newLayerAddToRegistry_checkbox">
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_10">
+              <item>
+               <widget class="QLabel" name="label_24">
+                <property name="text">
+                 <string>Layers Working Directory</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="layerWorkingDirectory_txtField"/>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QPushButton" name="createNewLayer_btn">
+              <property name="text">
+               <string>Create</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </widget>
-        </item>
-        <item>
-         <widget class="QTableView" name="errElements_table"/>
         </item>
        </layout>
-       <zorder>validateStart_btn</zorder>
-       <zorder></zorder>
-       <zorder></zorder>
-       <zorder></zorder>
-       <zorder>errElementsList_label</zorder>
-       <zorder>errElements_table</zorder>
       </widget>
       <widget class="QWidget" name="pipeSize_tab">
        <attribute name="title">
-        <string>Cső méretek</string>
+        <string>Pipe Sizes</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_15">
         <item>
@@ -149,7 +403,7 @@
           <item>
            <widget class="QLabel" name="label">
             <property name="text">
-             <string>Méret hozzáadása:</string>
+             <string>Add Size</string>
             </property>
            </widget>
           </item>
@@ -163,9 +417,93 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="networkVal_tab">
+       <attribute name="title">
+        <string>Network Validation</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QPushButton" name="validateStart_btn">
+          <property name="text">
+           <string>Validate Network</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="checkStatus_label">
+            <property name="text">
+             <string>Status:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="checkStatusValue_label">
+            <property name="text">
+             <string>Not Validated</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLabel" name="numberOfElements_label">
+            <property name="text">
+             <string>Total Elements</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="numberOfElementsValue_label">
+            <property name="text">
+             <string>0</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QLabel" name="numberOfErrElements_label">
+            <property name="text">
+             <string>Failed Elements</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="numberOfErrElementsValue_label">
+            <property name="text">
+             <string>0</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="errElementsList_label">
+          <property name="text">
+           <string>Failed Elements List (Loose Connection)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableView" name="errElements_table"/>
+        </item>
+       </layout>
+       <zorder>validateStart_btn</zorder>
+       <zorder></zorder>
+       <zorder></zorder>
+       <zorder></zorder>
+       <zorder>errElementsList_label</zorder>
+       <zorder>errElements_table</zorder>
+      </widget>
       <widget class="QWidget" name="analyze_tab">
        <attribute name="title">
-        <string>Analízis</string>
+        <string>Analysis</string>
        </attribute>
        <widget class="QLabel" name="label_2">
         <property name="geometry">
@@ -183,7 +521,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Részeredmények</string>
+         <string>Partial Results</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_3">
@@ -196,7 +534,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>Szivattyú által biztosítandó téfogatáram</string>
+         <string>Required Pump Flow</string>
         </property>
        </widget>
        <widget class="Line" name="line">
@@ -222,7 +560,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>Teljes előremenő hálózat hővesztesége</string>
+         <string>Total HeatLoss of Forward Network</string>
         </property>
        </widget>
        <widget class="QWidget" name="layoutWidget">
@@ -238,7 +576,7 @@
          <item>
           <widget class="QPushButton" name="theAnalysis_btn">
            <property name="text">
-            <string>Analízis</string>
+            <string>Analyze</string>
            </property>
           </widget>
          </item>
@@ -335,364 +673,26 @@
          <item>
           <widget class="QPushButton" name="showResults_btn">
            <property name="text">
-            <string>Eredmények mutatása</string>
+            <string>Show Results</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="showPressureResults_btn">
            <property name="text">
-            <string>Körönkénti nyomás / fojtás eredmények</string>
+            <string>Loop Pressure and Choke Results</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="showPipeFlowChart_btn">
            <property name="text">
-            <string>Áramlás eredmények</string>
+            <string>Flow Results</string>
            </property>
           </widget>
          </item>
         </layout>
        </widget>
-      </widget>
-      <widget class="QWidget" name="settings_tab">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <attribute name="title">
-        <string>Beállítások</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_13">
-        <item>
-         <widget class="QScrollArea" name="scrollArea">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="widgetResizable">
-           <bool>true</bool>
-          </property>
-          <widget class="QWidget" name="scrollAreaWidgetContents">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>402</width>
-             <height>754</height>
-            </rect>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_14">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_11">
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_4">
-                <item>
-                 <widget class="QPushButton" name="resetSettings_btn">
-                  <property name="text">
-                   <string>Visszaállítás</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="saveSettings_btn">
-                  <property name="text">
-                   <string>Mentés</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_17">
-              <property name="text">
-               <string>Réteg választás</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="refreshLayers_btn">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="baseSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="layoutDirection">
-               <enum>Qt::LeftToRight</enum>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">border-image : url(:/refresh/refresh.svg) 0 0 0 0 stretch stretch;</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_6">
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout_8">
-                <item>
-                 <widget class="QLabel" name="label_15">
-                  <property name="text">
-                   <string>Elemek QGIS réteg:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_16">
-                  <property name="text">
-                   <string>Csőhálózat QGIS réteg:</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout_9">
-                <item>
-                 <widget class="QComboBox" name="nodeLayerSelect_combo"/>
-                </item>
-                <item>
-                 <widget class="QComboBox" name="pipeLayerSelect_combo"/>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout_10">
-                <item>
-                 <widget class="QPushButton" name="formatLayers_btn">
-                  <property name="text">
-                   <string>Formázás</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <widget class="Line" name="line_2">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_14">
-              <property name="text">
-               <string>Kiindulási adatok</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_5">
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout_4">
-                <item>
-                 <widget class="QLabel" name="label_8">
-                  <property name="text">
-                   <string>Sűrűség</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_6">
-                  <property name="text">
-                   <string>Fajhő</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_4">
-                  <property name="text">
-                   <string>Δϑ</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_11">
-                  <property name="text">
-                   <string>Csősebesség</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout_6">
-                <item>
-                 <widget class="QLineEdit" name="density_txtField"/>
-                </item>
-                <item>
-                 <widget class="QLineEdit" name="specificHeat_txtField"/>
-                </item>
-                <item>
-                 <widget class="QLineEdit" name="deltaTheta_txtField"/>
-                </item>
-                <item>
-                 <widget class="QLineEdit" name="pipeSpeedLimit_txtField"/>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout_7">
-                <item>
-                 <widget class="QLabel" name="label_9">
-                  <property name="text">
-                   <string>kg/m3</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_7">
-                  <property name="text">
-                   <string>J/kgK</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_5">
-                  <property name="text">
-                   <string>K</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_13">
-                  <property name="text">
-                   <string>m/s</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <widget class="Line" name="line_3">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_18">
-              <property name="text">
-               <string>Új HMV réteg</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_7">
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout_11">
-                <item>
-                 <widget class="QLabel" name="label_19">
-                  <property name="text">
-                   <string>Réteg név</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_20">
-                  <property name="text">
-                   <string>Adatbázis file név</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_21">
-                  <property name="text">
-                   <string>Réteg típus</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_22">
-                  <property name="text">
-                   <string>Hozzáadás a réteg listához?</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout_12">
-                <item>
-                 <widget class="QLineEdit" name="newLayerName_txtField"/>
-                </item>
-                <item>
-                 <widget class="QLineEdit" name="newLayerDbFile_txtField"/>
-                </item>
-                <item>
-                 <widget class="QComboBox" name="newLayerType_combo">
-                  <item>
-                   <property name="text">
-                    <string>szakaszok</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>elemek</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QCheckBox" name="newLayerAddToRegistry_checkbox">
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_10">
-              <item>
-               <widget class="QLabel" name="label_24">
-                <property name="text">
-                 <string>Réteg munkakönyvtár</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="layerWorkingDirectory_txtField"/>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <widget class="QPushButton" name="createNewLayer_btn">
-              <property name="text">
-               <string>Létrehoz</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </widget>
-        </item>
-       </layout>
       </widget>
      </widget>
     </item>
