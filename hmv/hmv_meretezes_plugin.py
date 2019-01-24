@@ -14,6 +14,7 @@ from hmv_meretezes import NetworkEnvironment, AnalyzeHeatLoss, AnalyzeFlowRate,\
                           AnalyzePipeDiameter, AnalyzePipeDrag, AnalyzePressure
 from hmv_meretezes_models import SizeListModel, ElementErrorTableModel, ResultsTableModel,\
                                  PressureTableModel
+from translator import Translator
 import hmv_symbol_manager
 import datasource_manager
 from qt_utility import QtTranslate
@@ -35,6 +36,7 @@ class HmvPlugin(QObject):
         self.stPluginAction = None
         # Setting up the application log
         self.configureLogging()
+        self.translator = None
         # Used to store the network environment once initialized
         self.netEnv = None
         # Model for GUI size list
@@ -45,6 +47,7 @@ class HmvPlugin(QObject):
         self.pressureResultsModel = None
         self.chartWin = None
         self.elementErrTableModel = None
+    
     def initGui(self):
         # create Qt action that will open the plugin
         self.stPluginAction = QAction(u"HMV Méretezés", self.iface.mainWindow()) # pylint: disable=E0602
@@ -71,12 +74,17 @@ class HmvPlugin(QObject):
         self.dock.setupUi(self.dock)
         self.dock.sizeList.setModel(self.sizeListModel)
         self.dock.errElements_table.setModel(self.elementErrTableModel)
+        setupTranslator()
         # Analysis buttons are disabled by default
         self.dock.theAnalysis_btn.setEnabled(False)
         # We add the dock widget to the QGIS window
         self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dock)
         self.setDefaultValues()
         self.bindConnections()
+    def setupTranslator(self):
+        self.translator = Translator(self.iniConfig, self.dock.language_combo)
+        self.translator.loadConfig(os.path.join(os.path.realpath(__file__), "i18n"))
+        self.translator.activate()
     def bindConnections(self):
         """Binds actions to GUI object signals"""
         # Analysis actions
@@ -101,6 +109,7 @@ class HmvPlugin(QObject):
                         self.netEnv.setPipeLayerName)
         QObject.connect(self.dock.formatLayers_btn, SIGNAL("clicked()"), self.formatLayerChoice)
         QObject.connect(self.dock.createNewLayer_btn, SIGNAL('clicked()'), self.createNewLayer)
+        self.translator.bindConnection()
         
     def startAllCalc(self):
         self.startHeatlossCalc()
